@@ -1,11 +1,11 @@
 import { View, Text } from "react-native";
 
-const Svoyak = () => {
+const EKvartet = () => {
   return (
     <View>
-      <Text>Svoyak</Text>
+      <Text>EKvartet</Text>
     </View>
   );
 };
 
-export default Svoyak;
+export default EKvartet;
