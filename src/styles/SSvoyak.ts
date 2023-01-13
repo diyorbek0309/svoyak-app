@@ -40,4 +40,23 @@ export const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
   },
+  scoreButtonsWrap: {
+    display: "none",
+    position: "absolute",
+    flexDirection: "row",
+    right: 30,
+  },
+  scoreButton: {
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+    borderRadius: 5,
+    backgroundColor: "#0f0",
+    marginLeft: 5,
+  },
+  scoreButtonText: {
+    fontSize: 20,
+  },
+  activeGamer: {
+    display: "flex",
+  },
 });
