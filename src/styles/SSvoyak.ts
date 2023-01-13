@@ -60,4 +60,14 @@ export const styles = StyleSheet.create({
   activeGamer: {
     display: "flex",
   },
+  // -------------------------------------------------------------
+  resultWrap: {
+    display: "flex",
+    flexDirection: "row",
+    marginTop: 20,
+  },
+  resultText: {
+    fontSize: 24,
+    marginRight: 10,
+  },
 });
