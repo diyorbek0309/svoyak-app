@@ -17,6 +17,7 @@ export const styles = StyleSheet.create({
   },
   scores: {
     fontSize: 20,
+    paddingVertical: 5,
   },
   extraButtons: {
     display: "flex",
@@ -44,7 +45,7 @@ export const styles = StyleSheet.create({
     display: "none",
     position: "absolute",
     flexDirection: "row",
-    right: 30,
+    right: 20,
   },
   scoreButton: {
     paddingHorizontal: 4,

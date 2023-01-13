@@ -14,7 +14,6 @@ const Svoyak = () => {
   const [title, setTitle] = useState("O'yin nomi");
   const [canAdd, setCanAdd] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
-  const [results, setResults] = useState([]);
   const [data, setData] = useState([
     {
       id: 0,
