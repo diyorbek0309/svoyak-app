@@ -3,9 +3,6 @@ import { styles } from "../styles/SHome";
 
 const Home = ({ navigation }) => {
   const { App, title, text, button, author, created } = styles;
-  const pressHandler = () => {
-    navigation.navigate("Svoyak");
-  };
 
   const openLink = async () => {
     const url: string = "https://t.me/dasturchining_tundaligi";

@@ -1,10 +1,11 @@
 import { View, Text, ScrollView } from "react-native";
 import { styles } from "../styles/SSvoyak";
+import { ISvoyakData } from "../types/Props.interface";
+import { icons } from "../types/enums";
 
 const FinishedSvoyak = ({ results, title }) => {
-  const icons = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"];
-  const newResults = [];
-  results.forEach((result) => {
+  const newResults: { name: string; score: number }[] = [];
+  results.forEach((result: ISvoyakData) => {
     newResults.push({
       name: result.name,
       score: result.scores

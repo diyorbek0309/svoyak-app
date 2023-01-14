@@ -8,44 +8,45 @@ import {
 } from "react-native";
 import FinishedSvoyak from "../components/FinishedSvoyak";
 import { styles } from "../styles/SSvoyak";
+import { ISvoyakData } from "../types/Props.interface";
+import { eSvoyak, scores } from "../types/enums";
 
 const Svoyak = () => {
-  const scores = [10, 20, 30, 40, 50];
-  const [title, setTitle] = useState("O'yin nomi");
+  const [title, setTitle] = useState("Oʻyin nomi");
   const [canAdd, setCanAdd] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
-  const [data, setData] = useState([
+  const [data, setData] = useState<ISvoyakData[]>([
     {
       id: 0,
-      name: "1-ishtirokchi",
+      name: `1-${eSvoyak.DEFAULT_NAME}`,
       scores: "",
       numberOfLines: 2,
       isActive: false,
     },
     {
       id: 1,
-      name: "2-ishtirokchi",
+      name: `2-${eSvoyak.DEFAULT_NAME}`,
       scores: "",
       numberOfLines: 2,
       isActive: false,
     },
     {
       id: 2,
-      name: "3-ishtirokchi",
+      name: `3-${eSvoyak.DEFAULT_NAME}`,
       scores: "",
       numberOfLines: 2,
       isActive: false,
     },
     {
       id: 3,
-      name: "4-ishtirokchi",
+      name: `4-${eSvoyak.DEFAULT_NAME}`,
       scores: "",
       numberOfLines: 2,
       isActive: false,
     },
     {
       id: 4,
-      name: "5-ishtirokchi",
+      name: `5-${eSvoyak.DEFAULT_NAME}`,
       scores: "",
       numberOfLines: 2,
       isActive: false,
@@ -53,7 +54,7 @@ const Svoyak = () => {
   ]);
 
   const onChangeName = (name: string, id: number) => {
-    const newData = [...data];
+    const newData: ISvoyakData[] = [...data];
     newData.find((item) => item.id === id).name = name;
     setData(newData);
   };
@@ -61,7 +62,7 @@ const Svoyak = () => {
   const onChangeScore = (scores: string, id: number) => {
     const pattern = /^[\-\+\s]*[\d\s]*[\-\+\s]*$/;
     if (pattern.test(scores[scores.length - 1])) {
-      const newData = [...data];
+      const newData: ISvoyakData[] = [...data];
       const preScoresLength = newData.find((item) => item.id === id).scores
         .length;
       newData.find((item) => item.id === id).scores =
@@ -73,7 +74,7 @@ const Svoyak = () => {
   };
 
   const onScoreButtonClicked = (gamerID: number, score: number) => {
-    const newData = [...data];
+    const newData: ISvoyakData[] = [...data];
     newData.find((item) => item.id === gamerID).scores += score + " + ";
     setData(newData);
   };
@@ -84,9 +85,9 @@ const Svoyak = () => {
 
   const onGamerAdded = () => {
     if (data.length < 15) {
-      const newGamer = {
+      const newGamer: ISvoyakData = {
         id: data.length,
-        name: `${data.length + 1}-ishtirokchi`,
+        name: `${data.length + 1}-${eSvoyak.DEFAULT_NAME}`,
         scores: "",
         numberOfLines: 2,
         isActive: false,
@@ -97,7 +98,7 @@ const Svoyak = () => {
   };
 
   const showScoreButtons = (id: number) => {
-    const newData = [...data];
+    const newData: ISvoyakData[] = [...data];
     newData.forEach((item) => (item.isActive = false));
     newData.find((item) => item.id === id).isActive = true;
 
