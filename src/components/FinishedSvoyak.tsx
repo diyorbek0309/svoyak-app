@@ -1,10 +1,13 @@
 import { View, Text, ScrollView } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { styles } from "../styles/SSvoyak";
 import { ISvoyakData } from "../types/Props.interface";
 import { icons } from "../types/enums";
 
 const FinishedSvoyak = ({ results, title }) => {
   const newResults: { name: string; score: number }[] = [];
+  const game = {};
+
   results.forEach((result: ISvoyakData) => {
     newResults.push({
       name: result.name,
@@ -18,6 +21,8 @@ const FinishedSvoyak = ({ results, title }) => {
     });
   });
   newResults.sort((a, b) => b.score - a.score);
+
+  console.log(newResults);
 
   return (
     <ScrollView style={{ paddingHorizontal: 10 }}>
