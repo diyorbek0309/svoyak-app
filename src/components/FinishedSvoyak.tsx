@@ -1,13 +1,20 @@
 import { View, Text, ScrollView } from "react-native";
+import { useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { styles } from "../styles/SSvoyak";
 import { ISvoyakData } from "../types/Props.interface";
 import { icons } from "../types/enums";
 
 const FinishedSvoyak = ({ results, title }) => {
-  const newResults: { name: string; score: number }[] = [];
-  const game = {};
+  useEffect(() => {
+    getPreGames()
+      .then((games) => {
+        addNewGame(games);
+      })
+      .catch((error) => console.log(error));
+  }, []);
 
+  const newResults: { name: string; score: number }[] = [];
   results.forEach((result: ISvoyakData) => {
     newResults.push({
       name: result.name,
@@ -22,7 +29,26 @@ const FinishedSvoyak = ({ results, title }) => {
   });
   newResults.sort((a, b) => b.score - a.score);
 
-  console.log(newResults);
+  const getPreGames = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("games");
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const addNewGame = async (games) => {
+    const game = {
+      id: games.length,
+      title,
+      date: Date.now(),
+      results: newResults,
+      isFinished: true,
+    };
+    games.push(game);
+    await AsyncStorage.setItem("games", JSON.stringify(games));
+  };
 
   return (
     <ScrollView style={{ paddingHorizontal: 10 }}>
