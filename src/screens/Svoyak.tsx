@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   View,
   TouchableOpacity,
@@ -9,49 +9,14 @@ import {
 import FinishedSvoyak from "../components/FinishedSvoyak";
 import { styles } from "../styles/SSvoyak";
 import { ISvoyakData } from "../types/Props.interface";
-import { eSvoyak, scores } from "../types/enums";
+import { eSvoyak, scores, defaultData } from "../types/enums";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Svoyak = () => {
   const [title, setTitle] = useState("Oʻyin nomi");
   const [canAdd, setCanAdd] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
-  const [data, setData] = useState<ISvoyakData[]>([
-    {
-      id: 0,
-      name: `1-${eSvoyak.DEFAULT_NAME}`,
-      scores: "",
-      numberOfLines: 2,
-      isActive: false,
-    },
-    {
-      id: 1,
-      name: `2-${eSvoyak.DEFAULT_NAME}`,
-      scores: "",
-      numberOfLines: 2,
-      isActive: false,
-    },
-    {
-      id: 2,
-      name: `3-${eSvoyak.DEFAULT_NAME}`,
-      scores: "",
-      numberOfLines: 2,
-      isActive: false,
-    },
-    {
-      id: 3,
-      name: `4-${eSvoyak.DEFAULT_NAME}`,
-      scores: "",
-      numberOfLines: 2,
-      isActive: false,
-    },
-    {
-      id: 4,
-      name: `5-${eSvoyak.DEFAULT_NAME}`,
-      scores: "",
-      numberOfLines: 2,
-      isActive: false,
-    },
-  ]);
+  const [data, setData] = useState<ISvoyakData[]>(defaultData);
 
   const onChangeName = (name: string, id: number) => {
     const newData: ISvoyakData[] = [...data];
@@ -79,8 +44,14 @@ const Svoyak = () => {
     setData(newData);
   };
 
-  const onGameFinished = () => {
+  const onGameFinished = async () => {
     setIsFinished(true);
+    try {
+      const games = await getPreGames();
+      await addNewGame(games);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onGamerAdded = () => {
@@ -103,6 +74,27 @@ const Svoyak = () => {
     newData.find((item) => item.id === id).isActive = true;
 
     setData(newData);
+  };
+
+  const getPreGames = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("games");
+      return jsonValue != null ? JSON.parse(jsonValue) : [];
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const addNewGame = async (games) => {
+    const game = {
+      id: games.length,
+      title,
+      date: Date.now(),
+      results: data,
+      isFinished: true,
+    };
+    games.push(game);
+    await AsyncStorage.setItem("games", JSON.stringify(games));
   };
 
   return (
