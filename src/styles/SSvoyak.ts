@@ -24,7 +24,7 @@ export const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-around",
-    marginVertical: 30,
+    marginTop: 30,
   },
   addGamer: {
     paddingVertical: 10,
@@ -43,7 +43,7 @@ export const styles = StyleSheet.create({
     fontSize: 18,
   },
   scoreButtonsWrap: {
-    display: "none",
+    display: "flex",
     position: "absolute",
     flexDirection: "row",
     right: 20,
@@ -60,6 +60,10 @@ export const styles = StyleSheet.create({
   },
   activeGamer: {
     display: "flex",
+  },
+  sumScores: {
+    fontSize: 20,
+    fontStyle: "italic",
   },
   // -------------------------------------------------------------
   resultWrap: {

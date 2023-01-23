@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   View,
   TouchableOpacity,
@@ -97,10 +97,15 @@ const Svoyak = () => {
     await AsyncStorage.setItem("games", JSON.stringify(games));
   };
 
+  const clearData = () => {
+    setData(defaultData);
+    console.log("done");
+  };
+
   return (
     <ScrollView>
       {isFinished ? (
-        <FinishedSvoyak results={data} title={title} />
+        <FinishedSvoyak results={data} title={title} clearData={clearData} />
       ) : (
         <>
           <TextInput
@@ -119,21 +124,26 @@ const Svoyak = () => {
                   onChangeText={(name) => onChangeName(name, gamer.id)}
                   maxLength={18}
                 />
-                <View
-                  style={{
-                    ...styles.scoreButtonsWrap,
-                    display: `${gamer.isActive ? "flex" : "none"}`,
-                  }}
-                >
-                  {scores.map((score) => (
-                    <TouchableOpacity
-                      onPress={() => onScoreButtonClicked(gamer.id, score)}
-                      style={styles.scoreButton}
-                      key={score}
-                    >
-                      <Text style={styles.scoreButtonText}>{score}</Text>
-                    </TouchableOpacity>
-                  ))}
+                <View style={styles.scoreButtonsWrap}>
+                  {gamer.isActive ? (
+                    scores.map((score) => (
+                      <TouchableOpacity
+                        onPress={() => onScoreButtonClicked(gamer.id, score)}
+                        style={styles.scoreButton}
+                        key={score}
+                      >
+                        <Text style={styles.scoreButtonText}>{score}</Text>
+                      </TouchableOpacity>
+                    ))
+                  ) : (
+                    <Text style={styles.sumScores}>
+                      {!gamer.isActive &&
+                        gamer.scores
+                          .split(" + ")
+                          .map((score) => Number(score))
+                          .reduce((acc: number, a: number) => +acc + a, 0)}
+                    </Text>
+                  )}
                 </View>
                 <TextInput
                   style={styles.scores}

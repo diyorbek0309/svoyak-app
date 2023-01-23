@@ -1,10 +1,14 @@
+import { useEffect } from "react";
 import { View, Text, ScrollView } from "react-native";
 import { styles } from "../styles/SSvoyak";
 import { ISvoyakData } from "../types/Props.interface";
 import { icons } from "../types/enums";
 
-const FinishedSvoyak = ({ results, title }) => {
+const FinishedSvoyak = ({ results, title, clearData }) => {
   const newResults: { name: string; score: number }[] = [];
+  useEffect(() => {
+    clearData();
+  }, []);
   results.forEach((result: ISvoyakData) => {
     newResults.push({
       name: result.name,

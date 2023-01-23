@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { ScrollView, View, Text } from "react-native";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { styles } from "../styles/SResults";
@@ -38,7 +38,7 @@ const Results = () => {
   };
 
   return (
-    <View style={styles.resultsWrap}>
+    <ScrollView style={styles.resultsWrap}>
       {games && games.length ? (
         games.map((game) => (
           <View key={game.id} style={styles.singleGame}>
@@ -56,9 +56,9 @@ const Results = () => {
           </View>
         ))
       ) : (
-        <Text>Yakunlangan oʻyinlar yoʻq!</Text>
+        <Text style={styles.noResults}>Yakunlangan oʻyinlar yoʻq!</Text>
       )}
-    </View>
+    </ScrollView>
   );
 };
 
