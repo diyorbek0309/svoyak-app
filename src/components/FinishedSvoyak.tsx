@@ -8,6 +8,7 @@ import { icons } from "../types/enums";
 const FinishedSvoyak = () => {
   const newResults: { name: string; score: number }[] = [];
   const [gamers, setGamers] = useState([]);
+  const [title, setTitle] = useState("");
 
   useEffect(() => {
     getPreGames().then((data) => {
@@ -25,21 +26,25 @@ const FinishedSvoyak = () => {
   };
 
   const prepareData = (results) => {
-    results.forEach((result: ISvoyakData) => {
-      newResults.push({
-        name: result.name,
-        score: result.scores
-          .split(" + ")
-          .map((item: string) => {
-            if (item) return parseInt(item);
-            else return 0;
-          })
-          .reduce((acc: number, a: number) => acc + a, 0),
+    setTitle(results.title);
+
+    results &&
+      results.forEach((result: ISvoyakData) => {
+        newResults.push({
+          name: result.name,
+          score: result.scores
+            .split(" + ")
+            .map((item: string) => {
+              if (item) return parseInt(item);
+              else return 0;
+            })
+            .reduce((acc: number, a: number) => acc + a, 0),
+        });
       });
-    });
 
     let currentRank = 1;
     let currentScore = newResults[0].score;
+
     for (let i = 0; i < newResults.length; i++) {
       let gamer = newResults[i];
       if (gamer.score != currentScore) {
@@ -73,9 +78,7 @@ const FinishedSvoyak = () => {
 
   return (
     <ScrollView style={{ paddingHorizontal: 10 }}>
-      <Text style={styles.titleInput}>
-        {results ? results.title : ""} natijalari
-      </Text>
+      <Text style={styles.titleInput}>{title ? title : ""} natijalari</Text>
       {gamers && gamers.length ? (
         gamers.map((gamer: any, index) => (
           <View key={index} style={styles.resultWrap}>
