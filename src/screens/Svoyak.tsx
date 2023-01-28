@@ -6,11 +6,11 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import FinishedSvoyak from "../components/FinishedSvoyak";
 import { styles } from "../styles/SSvoyak";
 import { ISvoyakData } from "../types/Props.interface";
 import { eSvoyak, scores, defaultData } from "../types/enums";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Svoyak = () => {
   const [title, setTitle] = useState("Oʻyin nomi");
@@ -105,7 +105,7 @@ const Svoyak = () => {
   return (
     <ScrollView>
       {isFinished ? (
-        <FinishedSvoyak results={data} title={title} clearData={clearData} />
+        <FinishedSvoyak />
       ) : (
         <>
           <TextInput

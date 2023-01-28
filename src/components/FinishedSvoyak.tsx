@@ -1,46 +1,64 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { View, Text, ScrollView } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { styles } from "../styles/SSvoyak";
 import { ISvoyakData } from "../types/Props.interface";
 import { icons } from "../types/enums";
 
-const FinishedSvoyak = ({ results, title, clearData }) => {
+const FinishedSvoyak = () => {
   const newResults: { name: string; score: number }[] = [];
+  const [gamers, setGamers] = useState([]);
 
   useEffect(() => {
-    clearData();
+    getPreGames().then((data) => {
+      prepareData(data[data.length - 1]);
+    });
   }, []);
 
-  results.forEach((result: ISvoyakData) => {
-    newResults.push({
-      name: result.name,
-      score: result.scores
-        .split(" + ")
-        .map((item: string) => {
-          if (item) return parseInt(item);
-          else return 0;
-        })
-        .reduce((acc: number, a: number) => acc + a, 0),
-    });
-  });
-
-  let gamers = [];
-  let currentRank = 1;
-  let currentScore = newResults[0].score;
-  for (let i = 0; i < newResults.length; i++) {
-    let gamer = newResults[i];
-    if (gamer.score != currentScore) {
-      currentRank = i + 1;
-      currentScore = gamer.score;
+  const getPreGames = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("games");
+      return jsonValue != null ? JSON.parse(jsonValue) : [];
+    } catch (error) {
+      console.log(error);
     }
-    gamers.push({
-      icon: getEmoji(currentRank),
-      name: gamer.name,
-      score: gamer.score,
-    });
-  }
+  };
 
-  function getEmoji(rank: number) {
+  const prepareData = (results) => {
+    results.forEach((result: ISvoyakData) => {
+      newResults.push({
+        name: result.name,
+        score: result.scores
+          .split(" + ")
+          .map((item: string) => {
+            if (item) return parseInt(item);
+            else return 0;
+          })
+          .reduce((acc: number, a: number) => acc + a, 0),
+      });
+    });
+
+    let currentRank = 1;
+    let currentScore = newResults[0].score;
+    for (let i = 0; i < newResults.length; i++) {
+      let gamer = newResults[i];
+      if (gamer.score != currentScore) {
+        currentRank = i + 1;
+        currentScore = gamer.score;
+      }
+
+      setGamers([
+        ...gamers,
+        {
+          icon: getEmoji(currentRank),
+          name: gamer.name,
+          score: gamer.score,
+        },
+      ]);
+    }
+  };
+
+  const getEmoji = (rank: number) => {
     switch (rank) {
       case 1:
         return icons[0];
@@ -51,20 +69,28 @@ const FinishedSvoyak = ({ results, title, clearData }) => {
       default:
         return `${rank}.`;
     }
-  }
+  };
 
   return (
     <ScrollView style={{ paddingHorizontal: 10 }}>
-      <Text style={styles.titleInput}>{title} natijalari</Text>
-      {gamers &&
-        gamers.length &&
+      <Text style={styles.titleInput}>
+        {results ? results.title : ""} natijalari
+      </Text>
+      {gamers && gamers.length ? (
         gamers.map((gamer: any, index) => (
           <View key={index} style={styles.resultWrap}>
             <Text style={styles.resultText}>{gamer.icon}</Text>
             <Text style={styles.resultText}>{gamer.name}:</Text>
             <Text style={styles.resultText}>{gamer.score} ball</Text>
           </View>
-        ))}
+        ))
+      ) : (
+        <View>
+          <Text style={{ textAlign: "center", fontSize: 20, marginTop: 20 }}>
+            Qandaydir xatolik yuzaga keldi!
+          </Text>
+        </View>
+      )}
     </ScrollView>
   );
 };
