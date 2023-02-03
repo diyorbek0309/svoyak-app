@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import DeleteModal from "../components/DeleteModal";
 import { styles } from "../styles/SResults";
 import { icons } from "../types/enums";
+import { formatDate } from "../services/formatDate";
 
 const Results = () => {
   const [games, setGames] = useState([]);
@@ -12,7 +13,7 @@ const Results = () => {
 
   useEffect(() => {
     getPreGames().then((games) => {
-      setGames(games);
+      if (games.length) setGames(games);
     });
   }, []);
 
@@ -55,16 +56,20 @@ const Results = () => {
                 <Image source={require("../../assets/trash.png")} />
               </TouchableOpacity>
             </View>
-            {game.results.length &&
+            {game.results.length ? (
               game.results.map((result, index) => (
-                <View key={index} style={styles.singleGamer}>
+                <View key={result.id} style={styles.singleGamer}>
                   <Text style={styles.gamerName}>
                     {icons[index] || `${index + 1}.`}
                   </Text>
                   <Text style={styles.gamerName}>{result.name}</Text>
                   <Text style={styles.gamerScore}>{result.scores}</Text>
                 </View>
-              ))}
+              ))
+            ) : (
+              <Text>Natijalar yo'q</Text>
+            )}
+            <Text style={styles.gameDate}>{formatDate(game.date)}</Text>
           </View>
         ))
       ) : (

@@ -30,6 +30,7 @@ export const styles = StyleSheet.create({
   gamerName: {
     color: "#fff",
     fontSize: 20,
+    fontStyle: "italic",
   },
   gamerScore: {
     color: "#fff",
@@ -86,5 +87,11 @@ export const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  gameDate: {
+    textAlign: "center",
+    color: "#fff",
+    paddingTop: 10,
+    fontSize: 22,
   },
 });
