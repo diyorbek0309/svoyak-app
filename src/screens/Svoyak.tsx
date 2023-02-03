@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import {
   View,
@@ -6,6 +6,7 @@ import {
   Text,
   TextInput,
   ScrollView,
+  Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FinishedSvoyak from "../components/FinishedSvoyak";
@@ -13,7 +14,7 @@ import { styles } from "../styles/SSvoyak";
 import { ISvoyakData } from "../types/Props.interface";
 import { eSvoyak, scores } from "../types/enums";
 
-const Svoyak = () => {
+const Svoyak = ({ navigation }) => {
   const [title, setTitle] = useState("Oʻyin nomi");
   const [canAdd, setCanAdd] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
@@ -55,6 +56,30 @@ const Svoyak = () => {
     },
   ];
   const [data, setData] = useState<ISvoyakData[]>([]);
+
+  let removeListener = useRef();
+
+  useEffect(() => {
+    removeListener.current = navigation.addListener("beforeRemove", (e) => {
+      if (isFinished) {
+        return;
+      }
+
+      e.preventDefault();
+      Alert.alert(
+        "Davom ettirilsinmi?",
+        "Oʻyinni yakunlamasangiz, qilingan oʻzgarishlar saqlanmaydi!",
+        [
+          { text: "Davom etish", style: "cancel", onPress: () => {} },
+          {
+            text: "Tark etish",
+            style: "destructive",
+            onPress: () => navigation.dispatch(e.data.action),
+          },
+        ]
+      );
+    });
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
