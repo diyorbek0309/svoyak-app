@@ -13,7 +13,7 @@ import { styles } from "../styles/SSvoyak";
 import { ISvoyakData } from "../types/Props.interface";
 import { eSvoyak, scores } from "../types/enums";
 
-const Svoyak = ({ navigation }) => {
+const Svoyak = () => {
   const [title, setTitle] = useState("Oʻyin nomi");
   const [canAdd, setCanAdd] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
@@ -89,8 +89,6 @@ const Svoyak = ({ navigation }) => {
   };
 
   const onGameFinished = async () => {
-    console.log(data);
-
     setIsFinished(true);
     try {
       const games = await getPreGames();
@@ -132,6 +130,19 @@ const Svoyak = ({ navigation }) => {
   };
 
   const addNewGame = async (games) => {
+    data.map((game) => {
+      game.scores = game.scores
+        .split(" + ")
+        .map((item: string) => {
+          if (item) return parseInt(item);
+          else return 0;
+        })
+        .reduce((acc: number, a: number) => acc + a, 0)
+        .toString();
+    });
+
+    data.sort((a, b) => Number(b.scores) - Number(a.scores));
+
     const game = {
       id: games.length,
       title,
