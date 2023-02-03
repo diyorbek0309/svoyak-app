@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import {
   View,
   TouchableOpacity,
@@ -10,13 +11,56 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import FinishedSvoyak from "../components/FinishedSvoyak";
 import { styles } from "../styles/SSvoyak";
 import { ISvoyakData } from "../types/Props.interface";
-import { eSvoyak, scores, defaultData } from "../types/enums";
+import { eSvoyak, scores } from "../types/enums";
 
-const Svoyak = () => {
+const Svoyak = ({ navigation }) => {
   const [title, setTitle] = useState("Oʻyin nomi");
   const [canAdd, setCanAdd] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
-  const [data, setData] = useState<ISvoyakData[]>(defaultData);
+  const defaultData = [
+    {
+      id: 0,
+      name: `1-${eSvoyak.DEFAULT_NAME}`,
+      scores: "",
+      numberOfLines: 2,
+      isActive: false,
+    },
+    {
+      id: 1,
+      name: `2-${eSvoyak.DEFAULT_NAME}`,
+      scores: "",
+      numberOfLines: 2,
+      isActive: false,
+    },
+    {
+      id: 2,
+      name: `3-${eSvoyak.DEFAULT_NAME}`,
+      scores: "",
+      numberOfLines: 2,
+      isActive: false,
+    },
+    {
+      id: 3,
+      name: `4-${eSvoyak.DEFAULT_NAME}`,
+      scores: "",
+      numberOfLines: 2,
+      isActive: false,
+    },
+    {
+      id: 4,
+      name: `5-${eSvoyak.DEFAULT_NAME}`,
+      scores: "",
+      numberOfLines: 2,
+      isActive: false,
+    },
+  ];
+  const [data, setData] = useState<ISvoyakData[]>([]);
+
+  useFocusEffect(
+    useCallback(() => {
+      setData(defaultData);
+    }, [])
+  );
 
   const onChangeName = (name: string, id: number) => {
     const newData: ISvoyakData[] = [...data];
@@ -45,6 +89,8 @@ const Svoyak = () => {
   };
 
   const onGameFinished = async () => {
+    console.log(data);
+
     setIsFinished(true);
     try {
       const games = await getPreGames();
@@ -97,15 +143,10 @@ const Svoyak = () => {
     await AsyncStorage.setItem("games", JSON.stringify(games));
   };
 
-  const clearData = () => {
-    setData(defaultData);
-    console.log("done");
-  };
-
   return (
     <ScrollView>
       {isFinished ? (
-        <FinishedSvoyak />
+        <FinishedSvoyak results={data} title={title} />
       ) : (
         <>
           <TextInput
@@ -114,8 +155,7 @@ const Svoyak = () => {
             onChangeText={setTitle}
             maxLength={24}
           />
-          {data &&
-            data.length &&
+          {data && data.length ? (
             data.map((gamer) => (
               <View key={gamer.id} style={styles.scoresWrap}>
                 <TextInput
@@ -153,7 +193,10 @@ const Svoyak = () => {
                   onFocus={() => showScoreButtons(gamer.id)}
                 />
               </View>
-            ))}
+            ))
+          ) : (
+            <Text></Text>
+          )}
           <View style={styles.extraButtons}>
             <TouchableOpacity
               onPress={onGamerAdded}
