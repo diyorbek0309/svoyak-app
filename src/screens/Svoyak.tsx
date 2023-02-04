@@ -1,22 +1,91 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import {
   View,
   TouchableOpacity,
   Text,
   TextInput,
   ScrollView,
+  Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FinishedSvoyak from "../components/FinishedSvoyak";
 import { styles } from "../styles/SSvoyak";
 import { ISvoyakData } from "../types/Props.interface";
-import { eSvoyak, scores, defaultData } from "../types/enums";
+import { eSvoyak, scores } from "../types/enums";
 
-const Svoyak = () => {
+const Svoyak = ({ navigation }) => {
   const [title, setTitle] = useState("Oʻyin nomi");
   const [canAdd, setCanAdd] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
-  const [data, setData] = useState<ISvoyakData[]>(defaultData);
+  const defaultData = [
+    {
+      id: 0,
+      name: `1-${eSvoyak.DEFAULT_NAME}`,
+      scores: "",
+      numberOfLines: 2,
+      isActive: false,
+    },
+    {
+      id: 1,
+      name: `2-${eSvoyak.DEFAULT_NAME}`,
+      scores: "",
+      numberOfLines: 2,
+      isActive: false,
+    },
+    {
+      id: 2,
+      name: `3-${eSvoyak.DEFAULT_NAME}`,
+      scores: "",
+      numberOfLines: 2,
+      isActive: false,
+    },
+    {
+      id: 3,
+      name: `4-${eSvoyak.DEFAULT_NAME}`,
+      scores: "",
+      numberOfLines: 2,
+      isActive: false,
+    },
+    {
+      id: 4,
+      name: `5-${eSvoyak.DEFAULT_NAME}`,
+      scores: "",
+      numberOfLines: 2,
+      isActive: false,
+    },
+  ];
+  const [data, setData] = useState<ISvoyakData[]>([]);
+
+  let removeListener = useRef();
+
+  useEffect(() => {
+    removeListener.current = navigation.addListener("beforeRemove", (e) => {
+      if (isFinished) {
+        return;
+      }
+
+      e.preventDefault();
+      Alert.alert(
+        "Davom ettirilsinmi?",
+        "Oʻyinni yakunlamasangiz, qilingan oʻzgarishlar saqlanmaydi!",
+        [
+          { text: "Davom etish", style: "cancel", onPress: () => {} },
+          {
+            text: "Tark etish",
+            style: "destructive",
+            onPress: () => navigation.dispatch(e.data.action),
+          },
+        ]
+      );
+    });
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      setData(defaultData);
+    }, [])
+  );
 
   const onChangeName = (name: string, id: number) => {
     const newData: ISvoyakData[] = [...data];
@@ -86,6 +155,19 @@ const Svoyak = () => {
   };
 
   const addNewGame = async (games) => {
+    data.map((game) => {
+      game.scores = game.scores
+        .split(" + ")
+        .map((item: string) => {
+          if (item) return parseInt(item);
+          else return 0;
+        })
+        .reduce((acc: number, a: number) => acc + a, 0)
+        .toString();
+    });
+
+    data.sort((a, b) => Number(b.scores) - Number(a.scores));
+
     const game = {
       id: games.length,
       title,
@@ -97,15 +179,10 @@ const Svoyak = () => {
     await AsyncStorage.setItem("games", JSON.stringify(games));
   };
 
-  const clearData = () => {
-    setData(defaultData);
-    console.log("done");
-  };
-
   return (
     <ScrollView>
       {isFinished ? (
-        <FinishedSvoyak />
+        <FinishedSvoyak results={data} title={title} />
       ) : (
         <>
           <TextInput
@@ -114,8 +191,7 @@ const Svoyak = () => {
             onChangeText={setTitle}
             maxLength={24}
           />
-          {data &&
-            data.length &&
+          {data && data.length ? (
             data.map((gamer) => (
               <View key={gamer.id} style={styles.scoresWrap}>
                 <TextInput
@@ -153,7 +229,10 @@ const Svoyak = () => {
                   onFocus={() => showScoreButtons(gamer.id)}
                 />
               </View>
-            ))}
+            ))
+          ) : (
+            <Text></Text>
+          )}
           <View style={styles.extraButtons}>
             <TouchableOpacity
               onPress={onGamerAdded}

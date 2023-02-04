@@ -16,14 +16,21 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
+  delIcon: {
+    position: "absolute",
+    right: 5,
+    top: 5,
+  },
   gameTitle: {
     textAlign: "center",
     color: "#fff",
     fontSize: 28,
+    paddingBottom: 5,
   },
   gamerName: {
     color: "#fff",
     fontSize: 20,
+    fontStyle: "italic",
   },
   gamerScore: {
     color: "#fff",
@@ -34,5 +41,57 @@ export const styles = StyleSheet.create({
   noResults: {
     fontSize: 20,
     textAlign: "center",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+  },
+  button: {
+    borderRadius: 10,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: "#f00",
+    marginRight: 15,
+  },
+  buttonClose: {
+    backgroundColor: "#05a21a",
+    marginLeft: 15,
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 24,
+    textAlign: "center",
+    fontSize: 24,
+  },
+  modalButtons: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  gameDate: {
+    textAlign: "center",
+    color: "#fff",
+    paddingTop: 10,
+    fontSize: 22,
   },
 });

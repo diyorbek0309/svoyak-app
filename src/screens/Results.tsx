@@ -1,14 +1,19 @@
-import { ScrollView, View, Text } from "react-native";
+import { ScrollView, View, Text, TouchableOpacity, Image } from "react-native";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import DeleteModal from "../components/DeleteModal";
 import { styles } from "../styles/SResults";
 import { icons } from "../types/enums";
+import { formatDate } from "../services/formatDate";
 
 const Results = () => {
   const [games, setGames] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [deleteID, setDeleteID] = useState(null);
+
   useEffect(() => {
     getPreGames().then((games) => {
-      sortGames(games);
+      if (games.length) setGames(games);
     });
   }, []);
 
@@ -21,38 +26,50 @@ const Results = () => {
     }
   };
 
-  const sortGames = (games) => {
-    games.map((game) => {
-      game.results.map((result) => {
-        result.scores = result.scores
-          .split(" + ")
-          .map((item: string) => {
-            if (item) return parseInt(item);
-            else return 0;
-          })
-          .reduce((acc: number, a: number) => acc + a, 0);
-      });
-      game.results.sort((a, b) => b.scores - a.scores);
-    });
-    setGames(games);
+  const deleteSingleGame = async (id: number) => {
+    const newGames = games.filter((game) => id !== game.id);
+    setGames(newGames);
+    setModalVisible(!modalVisible);
+    await AsyncStorage.setItem("games", JSON.stringify(newGames));
   };
 
   return (
     <ScrollView style={styles.resultsWrap}>
+      <DeleteModal
+        isVisible={modalVisible}
+        setIsVisible={setModalVisible}
+        deleteSingleGame={deleteSingleGame}
+        deleteID={deleteID}
+      />
       {games && games.length ? (
         games.map((game) => (
           <View key={game.id} style={styles.singleGame}>
-            <Text style={styles.gameTitle}>{game.title}</Text>
-            {game.results.length &&
+            <View>
+              <Text style={styles.gameTitle}>{game.title}</Text>
+              <TouchableOpacity
+                style={styles.delIcon}
+                onPress={() => {
+                  setModalVisible(!modalVisible);
+                  setDeleteID(game.id);
+                }}
+              >
+                <Image source={require("../../assets/trash.png")} />
+              </TouchableOpacity>
+            </View>
+            {game.results.length ? (
               game.results.map((result, index) => (
-                <View key={index} style={styles.singleGamer}>
+                <View key={result.id} style={styles.singleGamer}>
                   <Text style={styles.gamerName}>
                     {icons[index] || `${index + 1}.`}
                   </Text>
                   <Text style={styles.gamerName}>{result.name}</Text>
                   <Text style={styles.gamerScore}>{result.scores}</Text>
                 </View>
-              ))}
+              ))
+            ) : (
+              <Text>Natijalar yo'q</Text>
+            )}
+            <Text style={styles.gameDate}>{formatDate(game.date)}</Text>
           </View>
         ))
       ) : (
