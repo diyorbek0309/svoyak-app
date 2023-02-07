@@ -14,33 +14,35 @@ const Home = ({ navigation }) => {
   const [isLight, setIsLight] = useState(true);
   const { App, title, text, button, author, created } = styles;
 
-  // useEffect(() => {
-  //   navigation.setOptions({
-  //     headerStyle: {
-  //       backgroundColor: isLight ? eColors.WHITE : eColors.BLACK,
-  //     },
-  //     headerTitleStyle: {
-  //       color: isLight ? eColors.BLACK : eColors.WHITE,
-  //     },
-  //     // headerLeft: () => (
-  //     //   <CustomBtn
-  //     //     image={eImages.MENU}
-  //     //     pressHandler={() => navigation.toggleDrawer()}
-  //     //   />
-  //     // ),
-  //     headerRight: () => (
-  //       <View>
-  //         <TouchableOpacity>
-  //           <Image source={isLight ? eImages.MOON : eImages.SUN} />
-  //         </TouchableOpacity>
-  //       </View>
-  //     ),
-  //   });
-  // }, [navigation, isLight]);
+  useEffect(() => {
+    navigation.setOptions({
+      headerStyle: {
+        backgroundColor: isLight ? eColors.WHITE : eColors.BLACK,
+      },
+      headerTitleStyle: {
+        color: isLight ? eColors.BLACK : eColors.WHITE,
+      },
+      headerLeft: () => (
+        <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
+          <Image
+            source={isLight ? eImages.MENU_LIGHT : eImages.MENU_DARK}
+            style={styles.menuIcon}
+          />
+        </TouchableOpacity>
+      ),
+      headerRight: () => (
+        <TouchableOpacity onPress={() => setIsLight(!isLight)}>
+          <Image
+            source={isLight ? eImages.MOON : eImages.SUN}
+            style={styles.modeIcon}
+          />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, isLight]);
 
   const openLink = async () => {
     const url: string = "https://t.me/dasturchining_tundaligi";
-
     await Linking.openURL(url);
   };
 

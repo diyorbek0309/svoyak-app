@@ -34,4 +34,14 @@ export const styles = StyleSheet.create({
     textAlign: "right",
     color: "#00f",
   },
+  menuIcon: {
+    width: 30,
+    height: 30,
+    marginLeft: 15,
+  },
+  modeIcon: {
+    width: 30,
+    height: 30,
+    marginRight: 15,
+  },
 });

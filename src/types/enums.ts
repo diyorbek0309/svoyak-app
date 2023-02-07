@@ -16,7 +16,8 @@ enum eColors {
 }
 
 enum eImages {
-  MENU = require("../../assets/menu_icon_light.png"),
+  MENU_LIGHT = require("../../assets/menu_icon_light.png"),
+  MENU_DARK = require("../../assets/menu_icon_dark.png"),
   MOON = require("../../assets/moon_icon.png"),
   SUN = require("../../assets/sun_icon.png"),
 }
