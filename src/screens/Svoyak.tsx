@@ -99,9 +99,12 @@ const Svoyak = ({ navigation }) => {
       const newData: ISvoyakData[] = [...data];
       const preScoresLength = newData.find((item) => item.id === id).scores
         .length;
+      console.log(preScoresLength);
       newData.find((item) => item.id === id).scores =
         preScoresLength < scores.length && scores[scores.length - 1] === "0"
           ? scores + " + "
+          : preScoresLength > scores.length && scores.length === 1
+          ? ""
           : scores;
       setData(newData);
     }
