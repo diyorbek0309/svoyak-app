@@ -10,6 +10,17 @@ enum eSvoyak {
   DEFAULT_NAME = "ishtirokchi",
 }
 
+enum eColors {
+  WHITE = "#FFFFFF",
+  BLACK = "#000000",
+}
+
+enum eImages {
+  MENU = require("../../assets/menu_icon_light.png"),
+  MOON = require("../../assets/moon_icon.png"),
+  SUN = require("../../assets/sun_icon.png"),
+}
+
 const icons = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"];
 
 const scores = [10, 20, 30, 40, 50];
@@ -52,4 +63,4 @@ const defaultData = [
   },
 ];
 
-export { eScreens, eSvoyak, icons, scores, defaultData };
+export { eScreens, eSvoyak, icons, scores, defaultData, eColors, eImages };

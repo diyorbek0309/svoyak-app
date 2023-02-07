@@ -1,8 +1,42 @@
-import { View, Text, TouchableOpacity, Pressable, Linking } from "react-native";
+import { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Pressable,
+  Linking,
+  Image,
+} from "react-native";
 import { styles } from "../styles/SHome";
+import { eColors, eImages } from "../types/enums";
 
 const Home = ({ navigation }) => {
+  const [isLight, setIsLight] = useState(true);
   const { App, title, text, button, author, created } = styles;
+
+  // useEffect(() => {
+  //   navigation.setOptions({
+  //     headerStyle: {
+  //       backgroundColor: isLight ? eColors.WHITE : eColors.BLACK,
+  //     },
+  //     headerTitleStyle: {
+  //       color: isLight ? eColors.BLACK : eColors.WHITE,
+  //     },
+  //     // headerLeft: () => (
+  //     //   <CustomBtn
+  //     //     image={eImages.MENU}
+  //     //     pressHandler={() => navigation.toggleDrawer()}
+  //     //   />
+  //     // ),
+  //     headerRight: () => (
+  //       <View>
+  //         <TouchableOpacity>
+  //           <Image source={isLight ? eImages.MOON : eImages.SUN} />
+  //         </TouchableOpacity>
+  //       </View>
+  //     ),
+  //   });
+  // }, [navigation, isLight]);
 
   const openLink = async () => {
     const url: string = "https://t.me/dasturchining_tundaligi";

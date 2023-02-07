@@ -1,12 +1,13 @@
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import "react-native-gesture-handler";
 import HomeScreen from "./src/screens/Home";
 import Svoyak from "./src/screens/Svoyak";
 import Results from "./src/screens/Results";
 import EKvartet from "./src/screens/EKvartet";
 import { eScreens } from "./src/types/enums";
 
-const { Navigator, Screen } = createNativeStackNavigator();
+const { Navigator, Screen } = createDrawerNavigator();
 
 function App() {
   return (
