@@ -201,7 +201,7 @@ const Svoyak = ({ navigation }) => {
                   style={styles.participantInput}
                   value={gamer.name}
                   onChangeText={(name) => onChangeName(name, gamer.id)}
-                  maxLength={18}
+                  maxLength={16}
                 />
                 <View style={styles.scoreButtonsWrap}>
                   {gamer.isActive ? (

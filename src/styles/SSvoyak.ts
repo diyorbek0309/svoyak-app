@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
   },
   participantInput: {
     fontSize: 22,
-    width: "60%",
+    width: "45%",
   },
   scoresWrap: {
     marginTop: 15,
