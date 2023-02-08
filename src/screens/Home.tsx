@@ -1,45 +1,12 @@
-import { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Pressable,
-  Linking,
-  Image,
-} from "react-native";
+import { View, Text, TouchableOpacity, Pressable, Linking } from "react-native";
+import { useContext } from "react";
 import { styles } from "../styles/SHome";
-import { eColors, eImages } from "../types/enums";
+import { ThemeContext } from "../services/ThemeContext";
 
 const Home = ({ navigation }) => {
-  const [isLight, setIsLight] = useState(true);
   const { App, title, text, button, author, created } = styles;
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerStyle: {
-        backgroundColor: isLight ? eColors.WHITE : eColors.BLACK,
-      },
-      headerTitleStyle: {
-        color: isLight ? eColors.BLACK : eColors.WHITE,
-      },
-      headerLeft: () => (
-        <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
-          <Image
-            source={isLight ? eImages.MENU_LIGHT : eImages.MENU_DARK}
-            style={styles.menuIcon}
-          />
-        </TouchableOpacity>
-      ),
-      headerRight: () => (
-        <TouchableOpacity onPress={() => setIsLight(!isLight)}>
-          <Image
-            source={isLight ? eImages.MOON : eImages.SUN}
-            style={styles.modeIcon}
-          />
-        </TouchableOpacity>
-      ),
-    });
-  }, [navigation, isLight]);
+  const { isLight } = useContext(ThemeContext);
+  console.log(isLight);
 
   const openLink = async () => {
     const url: string = "https://t.me/dasturchining_tundaligi";
