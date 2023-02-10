@@ -1,6 +1,6 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { Image, TouchableOpacity } from "react-native";
+import { Image, TouchableOpacity, StatusBar } from "react-native";
 import { useState } from "react";
 import "react-native-gesture-handler";
 import HomeScreen from "./src/screens/Home";
@@ -18,15 +18,23 @@ function App() {
 
   return (
     <NavigationContainer>
+      <StatusBar />
       <ThemeContext.Provider value={{ isLight }}>
-        <Navigator>
+        <Navigator
+          screenOptions={{
+            drawerStyle: {
+              backgroundColor: isLight ? "#ddffff" : "#12355b",
+            },
+            drawerInactiveTintColor: isLight ? "#12355b" : "#fff",
+          }}
+        >
           <Group
             screenOptions={({ navigation }) => ({
               headerStyle: {
                 backgroundColor: isLight ? eColors.WHITE : eColors.BLACK,
               },
               headerTitleStyle: {
-                color: isLight ? eColors.BLACK : eColors.WHITE,
+                color: isLight ? eColors.BLACK : "#fff",
               },
               headerLeft: () => (
                 <TouchableOpacity onPress={() => navigation.toggleDrawer()}>

@@ -200,7 +200,7 @@ const Svoyak = ({ navigation }) => {
   };
 
   return (
-    <ScrollView style={[!isLight && darkBG]}>
+    <ScrollView style={[{ backgroundColor: "#aaffff" }, !isLight && darkBG]}>
       {isFinished ? (
         <FinishedSvoyak results={data} title={title} navigation={navigation} />
       ) : (

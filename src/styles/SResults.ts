@@ -9,6 +9,7 @@ export const styles = StyleSheet.create({
   },
   resultsWrap: {
     padding: 20,
+    backgroundColor: "#aaffff",
   },
   singleGame: {
     backgroundColor: "#008086",

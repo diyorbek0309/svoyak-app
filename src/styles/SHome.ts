@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     justifyContent: "space-around",
     paddingHorizontal: 50,
     height: "100%",
-    backgroundColor: "#fff",
+    backgroundColor: "#aaffff",
   },
   darkBG: {
     backgroundColor: "#12355b",
@@ -18,6 +18,7 @@ export const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     textAlign: "center",
+    fontStyle: "italic",
   },
   button: {
     backgroundColor: "#008086",

@@ -11,7 +11,7 @@ enum eSvoyak {
 }
 
 enum eColors {
-  WHITE = "#FFFFFF",
+  WHITE = "#76ffff",
   BLACK = "#001e3c",
 }
 
