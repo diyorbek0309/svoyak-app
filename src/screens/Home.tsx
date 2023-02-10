@@ -4,9 +4,9 @@ import { styles } from "../styles/SHome";
 import { ThemeContext } from "../services/ThemeContext";
 
 const Home = ({ navigation }) => {
-  const { App, title, text, button, author, created } = styles;
+  const { App, title, text, button, author, created, darkBG, lightText } =
+    styles;
   const { isLight } = useContext(ThemeContext);
-  console.log(isLight);
 
   const openLink = async () => {
     const url: string = "https://t.me/dasturchining_tundaligi";
@@ -14,8 +14,8 @@ const Home = ({ navigation }) => {
   };
 
   return (
-    <View style={App}>
-      <Text style={title}>Nima oʻynamoqchisiz?</Text>
+    <View style={[App, !isLight && darkBG]}>
+      <Text style={[title, !isLight && lightText]}>Nima oʻynamoqchisiz?</Text>
       <View>
         <TouchableOpacity
           style={button}
@@ -37,9 +37,9 @@ const Home = ({ navigation }) => {
         >
           <Text style={text}>Natijalar</Text>
         </TouchableOpacity>
-        <Text style={created}>Created by </Text>
+        <Text style={[created, !isLight && lightText]}>Created by </Text>
         <Pressable onPress={openLink}>
-          <Text style={author}>Diyorbek Olimov</Text>
+          <Text style={[author, !isLight && lightText]}>Diyorbek Olimov</Text>
         </Pressable>
       </View>
     </View>

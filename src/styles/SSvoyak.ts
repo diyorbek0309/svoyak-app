@@ -1,6 +1,12 @@
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
+  darkBG: {
+    backgroundColor: "#222",
+  },
+  lightText: {
+    color: "#fff",
+  },
   titleInput: {
     fontSize: 28,
     textAlign: "center",

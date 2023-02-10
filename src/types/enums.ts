@@ -24,7 +24,7 @@ enum eImages {
 
 const icons = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"];
 
-const scores = [10, 20, 30, 40, 50];
+const scoresList = [10, 20, 30, 40, 50];
 
 const defaultData = [
   {
@@ -64,4 +64,4 @@ const defaultData = [
   },
 ];
 
-export { eScreens, eSvoyak, icons, scores, defaultData, eColors, eImages };
+export { eScreens, eSvoyak, icons, scoresList, defaultData, eColors, eImages };

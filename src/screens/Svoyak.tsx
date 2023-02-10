@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useContext } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import {
   View,
@@ -12,12 +12,30 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import FinishedSvoyak from "../components/FinishedSvoyak";
 import { styles } from "../styles/SSvoyak";
 import { ISvoyakData } from "../types/Props.interface";
-import { eSvoyak, scores } from "../types/enums";
+import { eSvoyak, scoresList } from "../types/enums";
+import { ThemeContext } from "../services/ThemeContext";
 
 const Svoyak = ({ navigation }) => {
   const [title, setTitle] = useState("Oʻyin nomi");
   const [canAdd, setCanAdd] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
+  const { isLight } = useContext(ThemeContext);
+  const {
+    darkBG,
+    lightText,
+    titleInput,
+    participantInput,
+    scoreButton,
+    scoreButtonText,
+    scores,
+    scoreButtonsWrap,
+    sumScores,
+    scoresWrap,
+    extraButtons,
+    textInButton,
+    endGame,
+    addGamer,
+  } = styles;
   const defaultData = [
     {
       id: 0,
@@ -99,7 +117,6 @@ const Svoyak = ({ navigation }) => {
       const newData: ISvoyakData[] = [...data];
       const preScoresLength = newData.find((item) => item.id === id).scores
         .length;
-      console.log(preScoresLength);
       newData.find((item) => item.id === id).scores =
         preScoresLength < scores.length && scores[scores.length - 1] === "0"
           ? scores + " + "
@@ -183,39 +200,39 @@ const Svoyak = ({ navigation }) => {
   };
 
   return (
-    <ScrollView>
+    <ScrollView style={[!isLight && darkBG]}>
       {isFinished ? (
-        <FinishedSvoyak results={data} title={title} />
+        <FinishedSvoyak results={data} title={title} navigation={navigation} />
       ) : (
         <>
           <TextInput
-            style={styles.titleInput}
+            style={[titleInput, !isLight && lightText]}
             value={title}
             onChangeText={setTitle}
             maxLength={24}
           />
           {data && data.length ? (
             data.map((gamer) => (
-              <View key={gamer.id} style={styles.scoresWrap}>
+              <View key={gamer.id} style={scoresWrap}>
                 <TextInput
-                  style={styles.participantInput}
+                  style={[participantInput, !isLight && lightText]}
                   value={gamer.name}
                   onChangeText={(name) => onChangeName(name, gamer.id)}
                   maxLength={16}
                 />
-                <View style={styles.scoreButtonsWrap}>
+                <View style={scoreButtonsWrap}>
                   {gamer.isActive ? (
-                    scores.map((score) => (
+                    scoresList.map((score) => (
                       <TouchableOpacity
                         onPress={() => onScoreButtonClicked(gamer.id, score)}
-                        style={styles.scoreButton}
+                        style={scoreButton}
                         key={score}
                       >
-                        <Text style={styles.scoreButtonText}>{score}</Text>
+                        <Text style={scoreButtonText}>{score}</Text>
                       </TouchableOpacity>
                     ))
                   ) : (
-                    <Text style={styles.sumScores}>
+                    <Text style={[sumScores, !isLight && lightText]}>
                       {!gamer.isActive &&
                         gamer.scores
                           .split(" + ")
@@ -225,7 +242,7 @@ const Svoyak = ({ navigation }) => {
                   )}
                 </View>
                 <TextInput
-                  style={styles.scores}
+                  style={[scores, !isLight && lightText]}
                   multiline={true}
                   value={gamer.scores}
                   onChangeText={(scores) => onChangeScore(scores, gamer.id)}
@@ -236,16 +253,16 @@ const Svoyak = ({ navigation }) => {
           ) : (
             <Text></Text>
           )}
-          <View style={styles.extraButtons}>
+          <View style={extraButtons}>
             <TouchableOpacity
               onPress={onGamerAdded}
               disabled={canAdd}
-              style={styles.addGamer}
+              style={addGamer}
             >
-              <Text style={styles.textInButton}>Qoʻshish</Text>
+              <Text style={textInButton}>Qoʻshish</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={onGameFinished} style={styles.endGame}>
-              <Text style={styles.textInButton}>Yakunlash</Text>
+            <TouchableOpacity onPress={onGameFinished} style={endGame}>
+              <Text style={textInButton}>Yakunlash</Text>
             </TouchableOpacity>
           </View>
         </>

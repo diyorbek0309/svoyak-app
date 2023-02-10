@@ -1,10 +1,21 @@
-import { View, Text, ScrollView } from "react-native";
+import { useContext } from "react";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { styles } from "../styles/SSvoyak";
 import { ISvoyakData } from "../types/Props.interface";
 import { getEmoji } from "../services/getEmoji";
+import { ThemeContext } from "../services/ThemeContext";
 
-const FinishedSvoyak = ({ results, title }) => {
+const FinishedSvoyak = ({ results, title, navigation }) => {
   const newResults: { name: string; score: number }[] = [];
+  const { isLight } = useContext(ThemeContext);
+  const {
+    titleInput,
+    resultText,
+    resultWrap,
+    lightText,
+    addGamer,
+    textInButton,
+  } = styles;
 
   results.forEach((result: ISvoyakData) => {
     newResults.push({
@@ -39,16 +50,30 @@ const FinishedSvoyak = ({ results, title }) => {
 
   return (
     <ScrollView style={{ paddingHorizontal: 10 }}>
-      <Text style={styles.titleInput}>{title} natijalari</Text>
+      <Text style={[titleInput, !isLight && lightText]}>
+        {title} natijalari
+      </Text>
       {gamers &&
         gamers.length &&
         gamers.map((gamer: any, index) => (
-          <View key={index} style={styles.resultWrap}>
-            <Text style={styles.resultText}>{gamer.icon}</Text>
-            <Text style={styles.resultText}>{gamer.name}:</Text>
-            <Text style={styles.resultText}>{gamer.score} ball</Text>
+          <View key={index} style={resultWrap}>
+            <Text style={[resultText, !isLight && lightText]}>
+              {gamer.icon}
+            </Text>
+            <Text style={[resultText, !isLight && lightText]}>
+              {gamer.name}:
+            </Text>
+            <Text style={[resultText, !isLight && lightText]}>
+              {gamer.score} ball
+            </Text>
           </View>
         ))}
+      <TouchableOpacity
+        style={addGamer}
+        onPress={() => navigation.navigate("Svoyak Calculator")}
+      >
+        <Text style={textInButton}>Bosh sahifa</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };

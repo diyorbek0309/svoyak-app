@@ -9,6 +9,12 @@ export const styles = StyleSheet.create({
     height: "100%",
     backgroundColor: "#fff",
   },
+  darkBG: {
+    backgroundColor: "#333",
+  },
+  lightText: {
+    color: "#fff",
+  },
   title: {
     fontSize: 32,
     textAlign: "center",
