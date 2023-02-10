@@ -1,14 +1,19 @@
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
+  darkBG: {
+    backgroundColor: "#12355b",
+  },
+  lightText: {
+    color: "#fff",
+  },
   resultsWrap: {
     padding: 20,
-    marginBottom: 20,
   },
   singleGame: {
-    backgroundColor: "#05a21a",
+    backgroundColor: "#008086",
     padding: 15,
-    marginBottom: 20,
+    marginBottom: 30,
     borderRadius: 10,
   },
   singleGamer: {

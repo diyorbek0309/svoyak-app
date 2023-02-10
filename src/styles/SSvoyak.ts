@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   darkBG: {
-    backgroundColor: "#222",
+    backgroundColor: "#12355b",
   },
   lightText: {
     color: "#fff",
@@ -36,7 +36,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 6,
     paddingHorizontal: 20,
-    backgroundColor: "#0f0",
+    backgroundColor: "#008086",
   },
   endGame: {
     paddingVertical: 10,
@@ -58,11 +58,12 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 4,
     paddingVertical: 2,
     borderRadius: 5,
-    backgroundColor: "#0f0",
+    backgroundColor: "#008086",
     marginLeft: 5,
   },
   scoreButtonText: {
     fontSize: 20,
+    color: "#fff",
   },
   activeGamer: {
     display: "flex",

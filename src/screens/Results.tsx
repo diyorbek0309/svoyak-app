@@ -1,15 +1,30 @@
 import { ScrollView, View, Text, TouchableOpacity, Image } from "react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DeleteModal from "../components/DeleteModal";
 import { styles } from "../styles/SResults";
 import { icons } from "../types/enums";
 import { formatDate } from "../services/formatDate";
+import { ThemeContext } from "../services/ThemeContext";
 
 const Results = () => {
   const [games, setGames] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [deleteID, setDeleteID] = useState(null);
+  const { isLight } = useContext(ThemeContext);
+  const {
+    darkBG,
+    resultsWrap,
+    noResults,
+    singleGame,
+    singleGamer,
+    gameDate,
+    gameTitle,
+    gamerName,
+    gamerScore,
+    delIcon,
+    lightText,
+  } = styles;
 
   useEffect(() => {
     getPreGames().then((games) => {
@@ -34,7 +49,7 @@ const Results = () => {
   };
 
   return (
-    <ScrollView style={styles.resultsWrap}>
+    <ScrollView style={[resultsWrap, !isLight && darkBG]}>
       <DeleteModal
         isVisible={modalVisible}
         setIsVisible={setModalVisible}
@@ -43,11 +58,11 @@ const Results = () => {
       />
       {games && games.length ? (
         games.map((game) => (
-          <View key={game.id} style={styles.singleGame}>
+          <View key={game.id} style={singleGame}>
             <View>
-              <Text style={styles.gameTitle}>{game.title}</Text>
+              <Text style={gameTitle}>{game.title}</Text>
               <TouchableOpacity
-                style={styles.delIcon}
+                style={delIcon}
                 onPress={() => {
                   setModalVisible(!modalVisible);
                   setDeleteID(game.id);
@@ -58,22 +73,22 @@ const Results = () => {
             </View>
             {game.results.length ? (
               game.results.map((result, index) => (
-                <View key={result.id} style={styles.singleGamer}>
-                  <Text style={styles.gamerName}>
+                <View key={result.id} style={singleGamer}>
+                  <Text style={gamerName}>
                     {icons[index] || `${index + 1}.`}
                   </Text>
-                  <Text style={styles.gamerName}>{result.name}</Text>
-                  <Text style={styles.gamerScore}>{result.scores}</Text>
+                  <Text style={gamerName}>{result.name}</Text>
+                  <Text style={gamerScore}>{result.scores}</Text>
                 </View>
               ))
             ) : (
               <Text>Natijalar yo'q</Text>
             )}
-            <Text style={styles.gameDate}>{formatDate(game.date)}</Text>
+            <Text style={gameDate}>{formatDate(game.date)}</Text>
           </View>
         ))
       ) : (
-        <Text style={styles.noResults}>Yakunlangan oʻyinlar yoʻq!</Text>
+        <Text style={noResults}>Yakunlangan oʻyinlar yoʻq!</Text>
       )}
     </ScrollView>
   );

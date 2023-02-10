@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   darkBG: {
-    backgroundColor: "#333",
+    backgroundColor: "#12355b",
   },
   lightText: {
     color: "#fff",
@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
     textAlign: "center",
   },
   button: {
-    backgroundColor: "#0f0",
+    backgroundColor: "#008086",
     marginBottom: 20,
     borderRadius: 6,
     padding: 10,

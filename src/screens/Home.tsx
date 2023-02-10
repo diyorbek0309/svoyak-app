@@ -15,19 +15,15 @@ const Home = ({ navigation }) => {
 
   return (
     <View style={[App, !isLight && darkBG]}>
-      <Text style={[title, !isLight && lightText]}>Nima oʻynamoqchisiz?</Text>
+      <Text style={[title, !isLight && lightText]}>
+        Shaxsiy oʻyin hisoblagichi
+      </Text>
       <View>
         <TouchableOpacity
           style={button}
           onPress={() => navigation.navigate("Shaxsiy oʻyin")}
         >
-          <Text style={text}>Shaxsiy oʻyin</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={button}
-          onPress={() => navigation.navigate("Erudit-kvartet")}
-        >
-          <Text style={text}>Erudit-kvartet</Text>
+          <Text style={text}>Boshlang!</Text>
         </TouchableOpacity>
       </View>
       <View>
