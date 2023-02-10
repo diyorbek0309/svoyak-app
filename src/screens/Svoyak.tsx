@@ -75,34 +75,53 @@ const Svoyak = ({ navigation }) => {
   ];
   const [data, setData] = useState<ISvoyakData[]>([]);
 
-  let removeListener = useRef();
+  // useEffect(() => {
+  //   navigation.addListener("beforeRemove", (e) => {
+  //     // if (isFinished) {
+  //     //   return;
+  //     // }
+  //     console.log("12345");
 
-  useEffect(() => {
-    removeListener.current = navigation.addListener("beforeRemove", (e) => {
-      if (isFinished) {
-        return;
-      }
-
-      e.preventDefault();
-      Alert.alert(
-        "Davom ettirilsinmi?",
-        "Oʻyinni yakunlamasangiz, qilingan oʻzgarishlar saqlanmaydi!",
-        [
-          { text: "Davom etish", style: "cancel", onPress: () => {} },
-          {
-            text: "Tark etish",
-            style: "destructive",
-            onPress: () => navigation.dispatch(e.data.action),
-          },
-        ]
-      );
-    });
-  }, []);
+  //     e.preventDefault();
+  //     Alert.alert(
+  //       "Davom ettirilsinmi?",
+  //       "Oʻyinni yakunlamasangiz, qilingan oʻzgarishlar saqlanmaydi!",
+  //       [
+  //         { text: "Davom etish", style: "cancel", onPress: () => {} },
+  //         {
+  //           text: "Tark etish",
+  //           style: "destructive",
+  //           onPress: () => navigation.dispatch(e.data.action),
+  //         },
+  //       ]
+  //     );
+  //   });
+  // }, []);
 
   useFocusEffect(
     useCallback(() => {
+      setIsFinished(false);
       setData(defaultData);
-    }, [])
+      const onBackPress = (e) => {
+        Alert.alert(
+          "Davom ettirilsinmi?",
+          "Oʻyinni yakunlamasangiz, qilingan oʻzgarishlar saqlanmaydi!",
+          [
+            { text: "Davom etish", style: "cancel", onPress: () => {} },
+            {
+              text: "Tark etish",
+              style: "destructive",
+              onPress: () => navigation.dispatch(e.data.action),
+            },
+          ]
+        );
+        return true;
+      };
+
+      navigation.addListener("beforeRemove", (e) => onBackPress(e));
+
+      return () => navigation.removeListener("beforeRemove", onBackPress);
+    }, [navigation])
   );
 
   const onChangeName = (name: string, id: number) => {
