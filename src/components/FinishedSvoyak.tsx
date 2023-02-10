@@ -15,6 +15,7 @@ const FinishedSvoyak = ({ results, title, navigation }) => {
     lightText,
     addGamer,
     textInButton,
+    goHome,
   } = styles;
 
   results.forEach((result: ISvoyakData) => {
@@ -69,7 +70,7 @@ const FinishedSvoyak = ({ results, title, navigation }) => {
           </View>
         ))}
       <TouchableOpacity
-        style={addGamer}
+        style={[addGamer, goHome]}
         onPress={() => navigation.navigate("Svoyak Calculator")}
       >
         <Text style={textInButton}>Bosh sahifa</Text>

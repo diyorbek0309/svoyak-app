@@ -82,4 +82,9 @@ export const styles = StyleSheet.create({
     fontSize: 24,
     marginRight: 10,
   },
+  goHome: {
+    width: 135,
+    marginTop: 40,
+    marginLeft: "30%",
+  },
 });
