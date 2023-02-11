@@ -7,6 +7,7 @@ import {
   TextInput,
   ScrollView,
   Alert,
+  BackHandler,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FinishedSvoyak from "../components/FinishedSvoyak";
@@ -16,6 +17,7 @@ import { eSvoyak, scoresList } from "../types/enums";
 import { ThemeContext } from "../services/ThemeContext";
 
 const Svoyak = ({ navigation }) => {
+  const [data, setData] = useState<ISvoyakData[]>([]);
   const [title, setTitle] = useState("Oʻyin nomi");
   const [canAdd, setCanAdd] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
@@ -36,91 +38,42 @@ const Svoyak = ({ navigation }) => {
     endGame,
     addGamer,
   } = styles;
-  const defaultData = [
-    {
-      id: 0,
-      name: `1-${eSvoyak.DEFAULT_NAME}`,
-      scores: "",
-      numberOfLines: 2,
-      isActive: false,
-    },
-    {
-      id: 1,
-      name: `2-${eSvoyak.DEFAULT_NAME}`,
-      scores: "",
-      numberOfLines: 2,
-      isActive: false,
-    },
-    {
-      id: 2,
-      name: `3-${eSvoyak.DEFAULT_NAME}`,
-      scores: "",
-      numberOfLines: 2,
-      isActive: false,
-    },
-    {
-      id: 3,
-      name: `4-${eSvoyak.DEFAULT_NAME}`,
-      scores: "",
-      numberOfLines: 2,
-      isActive: false,
-    },
-    {
-      id: 4,
-      name: `5-${eSvoyak.DEFAULT_NAME}`,
-      scores: "",
-      numberOfLines: 2,
-      isActive: false,
-    },
-  ];
-  const [data, setData] = useState<ISvoyakData[]>([]);
-
-  // useEffect(() => {
-  //   navigation.addListener("beforeRemove", (e) => {
-  //     // if (isFinished) {
-  //     //   return;
-  //     // }
-  //     console.log("12345");
-
-  //     e.preventDefault();
-  //     Alert.alert(
-  //       "Davom ettirilsinmi?",
-  //       "Oʻyinni yakunlamasangiz, qilingan oʻzgarishlar saqlanmaydi!",
-  //       [
-  //         { text: "Davom etish", style: "cancel", onPress: () => {} },
-  //         {
-  //           text: "Tark etish",
-  //           style: "destructive",
-  //           onPress: () => navigation.dispatch(e.data.action),
-  //         },
-  //       ]
-  //     );
-  //   });
-  // }, []);
 
   useFocusEffect(
     useCallback(() => {
       setIsFinished(false);
+      const defaultData = [];
+      for (let i = 0; i < 5; i++) {
+        defaultData.push({
+          id: i,
+          name: `${i + 1}-${eSvoyak.DEFAULT_NAME}`,
+          scores: "",
+          numberOfLines: 2,
+          isActive: false,
+        });
+      }
       setData(defaultData);
-      const onBackPress = (e) => {
-        Alert.alert(
-          "Davom ettirilsinmi?",
-          "Oʻyinni yakunlamasangiz, qilingan oʻzgarishlar saqlanmaydi!",
-          [
-            { text: "Davom etish", style: "cancel", onPress: () => {} },
-            {
-              text: "Tark etish",
-              style: "destructive",
-              onPress: () => navigation.dispatch(e.data.action),
-            },
-          ]
-        );
-        return true;
-      };
 
-      navigation.addListener("beforeRemove", (e) => onBackPress(e));
+      const backHandler = BackHandler.addEventListener(
+        "hardwareBackPress",
+        () => {
+          Alert.alert(
+            "Davom ettirilsinmi?",
+            "Oʻyinni yakunlamasangiz, qilingan oʻzgarishlar saqlanmaydi!",
+            [
+              { text: "Davom etish", style: "cancel", onPress: () => {} },
+              {
+                text: "Tark etish",
+                style: "destructive",
+                onPress: () => navigation.goBack(),
+              },
+            ]
+          );
+          return true;
+        }
+      );
 
-      return () => navigation.removeListener("beforeRemove", onBackPress);
+      return () => backHandler.remove();
     }, [navigation])
   );
 

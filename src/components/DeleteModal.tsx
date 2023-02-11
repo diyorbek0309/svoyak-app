@@ -35,14 +35,14 @@ const DeleteModal = ({
       <View style={centeredView}>
         <View style={[modalView, !isLight && darkBG]}>
           <Text style={[modalText, !isLight && lightText]}>
-            Ushbu o'yinni o'chirmoqchimisiz?
+            Ushbu oʻyinni oʻchirmoqchimisiz?
           </Text>
           <View style={modalButtons}>
             <TouchableOpacity
               onPress={() => deleteSingleGame(deleteID)}
               style={[button, buttonOpen]}
             >
-              <Text style={textStyle}>O'chirish</Text>
+              <Text style={textStyle}>Oʻchirish</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => setIsVisible(!isVisible)}
