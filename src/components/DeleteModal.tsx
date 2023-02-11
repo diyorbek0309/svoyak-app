@@ -1,40 +1,60 @@
 import { View, Text, TouchableOpacity, Modal } from "react-native";
+import { useContext } from "react";
 import { styles } from "../styles/SResults";
+import { ThemeContext } from "../services/ThemeContext";
 
 const DeleteModal = ({
   isVisible,
   setIsVisible,
   deleteSingleGame,
   deleteID,
-}) => (
-  <Modal
-    animationType="slide"
-    transparent={true}
-    visible={isVisible}
-    onRequestClose={() => {
-      setIsVisible(!isVisible);
-    }}
-  >
-    <View style={styles.centeredView}>
-      <View style={styles.modalView}>
-        <Text style={styles.modalText}>Ushbu o'yinni o'chirmoqchimisiz?</Text>
-        <View style={styles.modalButtons}>
-          <TouchableOpacity
-            onPress={() => deleteSingleGame(deleteID)}
-            style={[styles.button, styles.buttonOpen]}
-          >
-            <Text style={styles.textStyle}>O'chirish</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setIsVisible(!isVisible)}
-            style={[styles.button, styles.buttonClose]}
-          >
-            <Text style={styles.textStyle}>Bekor qilish</Text>
-          </TouchableOpacity>
+}) => {
+  const { isLight } = useContext(ThemeContext);
+  const {
+    centeredView,
+    modalView,
+    modalButtons,
+    modalText,
+    button,
+    buttonOpen,
+    buttonClose,
+    textStyle,
+    darkBG,
+    lightText,
+  } = styles;
+
+  return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={isVisible}
+      onRequestClose={() => {
+        setIsVisible(!isVisible);
+      }}
+    >
+      <View style={centeredView}>
+        <View style={[modalView, !isLight && darkBG]}>
+          <Text style={[modalText, !isLight && lightText]}>
+            Ushbu o'yinni o'chirmoqchimisiz?
+          </Text>
+          <View style={modalButtons}>
+            <TouchableOpacity
+              onPress={() => deleteSingleGame(deleteID)}
+              style={[button, buttonOpen]}
+            >
+              <Text style={textStyle}>O'chirish</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setIsVisible(!isVisible)}
+              style={[button, buttonClose]}
+            >
+              <Text style={textStyle}>Bekor qilish</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
-    </View>
-  </Modal>
-);
+    </Modal>
+  );
+};
 
 export default DeleteModal;

@@ -56,7 +56,7 @@ export const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: "#fff",
     borderRadius: 10,
     padding: 35,
     alignItems: "center",
@@ -76,7 +76,7 @@ export const styles = StyleSheet.create({
     marginRight: 15,
   },
   buttonClose: {
-    backgroundColor: "#05a21a",
+    backgroundColor: "#008086",
     marginLeft: 15,
   },
   textStyle: {

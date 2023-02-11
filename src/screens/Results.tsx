@@ -1,5 +1,6 @@
 import { ScrollView, View, Text, TouchableOpacity, Image } from "react-native";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DeleteModal from "../components/DeleteModal";
 import { styles } from "../styles/SResults";
@@ -26,11 +27,19 @@ const Results = () => {
     lightText,
   } = styles;
 
-  useEffect(() => {
-    getPreGames().then((games) => {
-      if (games.length) setGames(games);
-    });
-  }, []);
+  // useEffect(() => {
+  //   getPreGames().then((games) => {
+  //     if (games.length) setGames(games);
+  //   });
+  // }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      getPreGames().then((games) => {
+        if (games.length) setGames(games);
+      });
+    }, [])
+  );
 
   const getPreGames = async () => {
     try {
@@ -88,7 +97,9 @@ const Results = () => {
           </View>
         ))
       ) : (
-        <Text style={noResults}>Yakunlangan oʻyinlar yoʻq!</Text>
+        <Text style={[noResults, !isLight && lightText]}>
+          Yakunlangan oʻyinlar yoʻq!
+        </Text>
       )}
     </ScrollView>
   );
