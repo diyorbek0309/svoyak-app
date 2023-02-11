@@ -4,6 +4,9 @@ export const styles = StyleSheet.create({
   darkBG: {
     backgroundColor: "#12355b",
   },
+  darkBGModal: {
+    backgroundColor: "#012654",
+  },
   lightText: {
     color: "#fff",
   },

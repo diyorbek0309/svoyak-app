@@ -20,6 +20,7 @@ const DeleteModal = ({
     buttonClose,
     textStyle,
     darkBG,
+    darkBGModal,
     lightText,
   } = styles;
 
@@ -33,7 +34,7 @@ const DeleteModal = ({
       }}
     >
       <View style={centeredView}>
-        <View style={[modalView, !isLight && darkBG]}>
+        <View style={[modalView, !isLight && darkBGModal]}>
           <Text style={[modalText, !isLight && lightText]}>
             Ushbu oʻyinni oʻchirmoqchimisiz?
           </Text>
