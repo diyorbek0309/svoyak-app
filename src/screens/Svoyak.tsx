@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, useContext } from "react";
+import { useState, useCallback, useContext } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import {
   View,
@@ -15,11 +15,13 @@ import { styles } from "../styles/SSvoyak";
 import { ISvoyakData } from "../types/Props.interface";
 import { eSvoyak, scoresList } from "../types/enums";
 import { ThemeContext } from "../services/ThemeContext";
+import { sumScoresFN } from "../services/sumScores";
 
 const Svoyak = ({ navigation }) => {
   const [data, setData] = useState<ISvoyakData[]>([]);
   const [title, setTitle] = useState("Oʻyin nomi");
   const [canAdd, setCanAdd] = useState(false);
+  const [sum, setSum] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
   const { isLight } = useContext(ThemeContext);
   const {
@@ -99,9 +101,14 @@ const Svoyak = ({ navigation }) => {
     }
   };
 
-  const onScoreButtonClicked = (gamerID: number, score: number) => {
+  const onScoreButtonClicked = (gamerID: number, score: string) => {
     const newData: ISvoyakData[] = [...data];
-    newData.find((item) => item.id === gamerID).scores += score + " + ";
+    if (score === "-") {
+      newData.find((item) => item.id === gamerID).scores += score;
+    } else {
+      newData.find((item) => item.id === gamerID).scores += score + " + ";
+    }
+
     setData(newData);
   };
 
@@ -205,11 +212,7 @@ const Svoyak = ({ navigation }) => {
                     ))
                   ) : (
                     <Text style={[sumScores, !isLight && lightText]}>
-                      {!gamer.isActive &&
-                        gamer.scores
-                          .split(" + ")
-                          .map((score) => Number(score))
-                          .reduce((acc: number, a: number) => +acc + a, 0)}
+                      {!gamer.isActive && sumScoresFN(gamer.scores)}
                     </Text>
                   )}
                 </View>

@@ -24,7 +24,7 @@ enum eImages {
 
 const icons = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"];
 
-const scoresList = [10, 20, 30, 40, 50];
+const scoresList = ["-", "10", "20", "30", "40", "50"];
 
 const defaultData = [
   {
