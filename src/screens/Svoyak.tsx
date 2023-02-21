@@ -8,6 +8,7 @@ import {
   ScrollView,
   Alert,
   BackHandler,
+  Keyboard,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FinishedSvoyak from "../components/FinishedSvoyak";
@@ -39,6 +40,8 @@ const Svoyak = ({ navigation }) => {
     textInButton,
     endGame,
     addGamer,
+    minusButton,
+    minusText,
   } = styles;
 
   useFocusEffect(
@@ -189,6 +192,7 @@ const Svoyak = ({ navigation }) => {
             value={title}
             onChangeText={setTitle}
             maxLength={24}
+            placeholder="Oʻyin nomi"
           />
           {data && data.length ? (
             data.map((gamer) => (
@@ -197,17 +201,22 @@ const Svoyak = ({ navigation }) => {
                   style={[participantInput, !isLight && lightText]}
                   value={gamer.name}
                   onChangeText={(name) => onChangeName(name, gamer.id)}
-                  maxLength={16}
+                  maxLength={14}
+                  placeholder={`${gamer.id + 1}-ishtirokchi`}
                 />
                 <View style={scoreButtonsWrap}>
                   {gamer.isActive ? (
-                    scoresList.map((score) => (
+                    scoresList.map((score, index) => (
                       <TouchableOpacity
                         onPress={() => onScoreButtonClicked(gamer.id, score)}
-                        style={scoreButton}
+                        style={[scoreButton, index === 0 && minusButton]}
                         key={score}
                       >
-                        <Text style={scoreButtonText}>{score}</Text>
+                        <Text
+                          style={[scoreButtonText, index === 0 && minusText]}
+                        >
+                          {score}
+                        </Text>
                       </TouchableOpacity>
                     ))
                   ) : (

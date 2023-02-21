@@ -4,6 +4,7 @@ import { styles } from "../styles/SSvoyak";
 import { ISvoyakData } from "../types/Props.interface";
 import { getEmoji } from "../services/getEmoji";
 import { ThemeContext } from "../services/ThemeContext";
+import { sumScoresFN } from "../services/sumScores";
 
 const FinishedSvoyak = ({ results, title, navigation }) => {
   const newResults: { name: string; score: number }[] = [];
@@ -21,13 +22,7 @@ const FinishedSvoyak = ({ results, title, navigation }) => {
   results.forEach((result: ISvoyakData) => {
     newResults.push({
       name: result.name,
-      score: result.scores
-        .split(" + ")
-        .map((item: string) => {
-          if (item) return parseInt(item);
-          else return 0;
-        })
-        .reduce((acc: number, a: number) => acc + a, 0),
+      score: sumScoresFN(result.scores),
     });
   });
 

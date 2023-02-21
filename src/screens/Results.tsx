@@ -27,12 +27,6 @@ const Results = () => {
     lightText,
   } = styles;
 
-  // useEffect(() => {
-  //   getPreGames().then((games) => {
-  //     if (games.length) setGames(games);
-  //   });
-  // }, []);
-
   useFocusEffect(
     useCallback(() => {
       getPreGames().then((games) => {

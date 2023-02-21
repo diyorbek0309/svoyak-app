@@ -61,6 +61,13 @@ export const styles = StyleSheet.create({
     backgroundColor: "#008086",
     marginLeft: 5,
   },
+  minusButton: {
+    paddingHorizontal: 10,
+    paddingVertical: 0,
+  },
+  minusText: {
+    fontSize: 24,
+  },
   scoreButtonText: {
     fontSize: 20,
     color: "#fff",
