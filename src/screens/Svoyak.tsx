@@ -8,7 +8,6 @@ import {
   ScrollView,
   Alert,
   BackHandler,
-  Keyboard,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FinishedSvoyak from "../components/FinishedSvoyak";
@@ -22,7 +21,8 @@ const Svoyak = ({ navigation }) => {
   const [data, setData] = useState<ISvoyakData[]>([]);
   const [title, setTitle] = useState("Oʻyin nomi");
   const [canAdd, setCanAdd] = useState(false);
-  const [sum, setSum] = useState(0);
+  const [autocompleteNames, setAutocompleteNames] = useState(["O. Diyorbek"]);
+  const [showHint, setShowHint] = useState(null);
   const [isFinished, setIsFinished] = useState(false);
   const { isLight } = useContext(ThemeContext);
   const {
@@ -42,6 +42,9 @@ const Svoyak = ({ navigation }) => {
     addGamer,
     minusButton,
     minusText,
+    hintsWrap,
+    hintButton,
+    hintText,
   } = styles;
 
   useFocusEffect(
@@ -51,7 +54,7 @@ const Svoyak = ({ navigation }) => {
       for (let i = 0; i < 5; i++) {
         defaultData.push({
           id: i,
-          name: `${i + 1}-${eSvoyak.DEFAULT_NAME}`,
+          name: ``,
           scores: "",
           numberOfLines: 2,
           isActive: false,
@@ -78,6 +81,14 @@ const Svoyak = ({ navigation }) => {
         }
       );
 
+      async function loadNames() {
+        const storedNames = await AsyncStorage.getItem("names");
+        if (storedNames) {
+          setAutocompleteNames(JSON.parse(storedNames));
+        }
+      }
+      loadNames();
+
       return () => backHandler.remove();
     }, [navigation])
   );
@@ -85,7 +96,20 @@ const Svoyak = ({ navigation }) => {
   const onChangeName = (name: string, id: number) => {
     const newData: ISvoyakData[] = [...data];
     newData.find((item) => item.id === id).name = name;
-    setData(newData);
+    if (name.length) {
+      const filteredNames = autocompleteNames.filter((n) =>
+        n.toLowerCase().includes(name.toLowerCase())
+      );
+      setAutocompleteNames(filteredNames);
+      setShowHint(id);
+      setData(newData);
+    } else {
+      setShowHint(null);
+    }
+  };
+
+  const onFocus = (id: number) => {
+    if (id !== showHint) setShowHint(null);
   };
 
   const onChangeScore = (scores: string, id: number) => {
@@ -116,7 +140,9 @@ const Svoyak = ({ navigation }) => {
   };
 
   const onGameFinished = async () => {
-    setIsFinished(true);
+    if (title.length) {
+      setIsFinished(true);
+    }
     try {
       const games = await getPreGames();
       await addNewGame(games);
@@ -157,6 +183,7 @@ const Svoyak = ({ navigation }) => {
   };
 
   const addNewGame = async (games) => {
+    const autoNames = [...autocompleteNames];
     data.map((game) => {
       game.scores = game.scores
         .split(" + ")
@@ -166,6 +193,8 @@ const Svoyak = ({ navigation }) => {
         })
         .reduce((acc: number, a: number) => acc + a, 0)
         .toString();
+
+      autoNames.push(game.name);
     });
 
     data.sort((a, b) => Number(b.scores) - Number(a.scores));
@@ -178,6 +207,8 @@ const Svoyak = ({ navigation }) => {
       isFinished: true,
     };
     games.push(game);
+
+    await AsyncStorage.setItem("names", JSON.stringify(autoNames));
     await AsyncStorage.setItem("games", JSON.stringify(games));
   };
 
@@ -201,9 +232,18 @@ const Svoyak = ({ navigation }) => {
                   style={[participantInput, !isLight && lightText]}
                   value={gamer.name}
                   onChangeText={(name) => onChangeName(name, gamer.id)}
+                  onFocus={() => onFocus(gamer.id)}
                   maxLength={14}
                   placeholder={`${gamer.id + 1}-ishtirokchi`}
                 />
+                <View style={hintsWrap}>
+                  {showHint === gamer.id &&
+                    autocompleteNames.map((name) => (
+                      <TouchableOpacity key={name} style={hintButton}>
+                        <Text style={hintText}>{name}</Text>
+                      </TouchableOpacity>
+                    ))}
+                </View>
                 <View style={scoreButtonsWrap}>
                   {gamer.isActive ? (
                     scoresList.map((score, index) => (
@@ -231,6 +271,7 @@ const Svoyak = ({ navigation }) => {
                   value={gamer.scores}
                   onChangeText={(scores) => onChangeScore(scores, gamer.id)}
                   onFocus={() => showScoreButtons(gamer.id)}
+                  placeholder="Ball"
                 />
               </View>
             ))

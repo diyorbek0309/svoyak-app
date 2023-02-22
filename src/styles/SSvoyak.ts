@@ -21,10 +21,29 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 10,
     display: "flex",
     flexDirection: "column",
+    position: "relative",
   },
   scores: {
     fontSize: 20,
     paddingVertical: 5,
+  },
+  hintsWrap: {
+    position: "absolute",
+    top: "40%",
+    left: "7%",
+    zIndex: 3,
+  },
+  hintButton: {
+    paddingVertical: 2,
+    paddingHorizontal: 12,
+    backgroundColor: "#008086",
+    borderWidth: 1,
+    borderColor: "#fff",
+  },
+  hintText: {
+    fontSize: 18,
+    color: "#fff",
+    textAlign: "center",
   },
   extraButtons: {
     display: "flex",
