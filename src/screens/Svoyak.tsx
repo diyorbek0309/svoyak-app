@@ -148,7 +148,16 @@ const Svoyak = ({ navigation }) => {
   };
 
   const onGameFinished = async () => {
+    let newData = [];
     if (title.length) {
+      newData = data.map((gamer, index) => {
+        if (!gamer.name.length) {
+          gamer.name = `${index + 1}-ishtirokchi`;
+        }
+        return gamer;
+      });
+
+      setData(newData);
       setIsFinished(true);
     }
     try {
