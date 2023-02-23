@@ -61,6 +61,7 @@ const Svoyak = ({ navigation }) => {
         });
       }
       setData(defaultData);
+      setShowHint(null);
 
       const backHandler = BackHandler.addEventListener(
         "hardwareBackPress",
@@ -81,12 +82,6 @@ const Svoyak = ({ navigation }) => {
         }
       );
 
-      async function loadNames() {
-        const storedNames = await AsyncStorage.getItem("names");
-        if (storedNames) {
-          setAutocompleteNames(JSON.parse(storedNames));
-        }
-      }
       loadNames();
 
       return () => backHandler.remove();
@@ -97,14 +92,20 @@ const Svoyak = ({ navigation }) => {
     const newData: ISvoyakData[] = [...data];
     newData.find((item) => item.id === id).name = name;
     if (name.length) {
-      const filteredNames = autocompleteNames.filter((n) =>
-        n.toLowerCase().includes(name.toLowerCase())
-      );
+      const filteredNames = autocompleteNames.filter((n) => n.includes(name));
       setAutocompleteNames(filteredNames);
       setShowHint(id);
       setData(newData);
     } else {
+      loadNames();
       setShowHint(null);
+    }
+  };
+
+  const loadNames = async () => {
+    const storedNames = await AsyncStorage.getItem("names");
+    if (storedNames) {
+      setAutocompleteNames(JSON.parse(storedNames));
     }
   };
 
@@ -115,6 +116,7 @@ const Svoyak = ({ navigation }) => {
   const onChangeScore = (scores: string, id: number) => {
     const pattern = /^[\-\+\s]*[\d\s]*[\-\+\s]*$/;
     if (pattern.test(scores[scores.length - 1])) {
+      console.log(scores);
       const newData: ISvoyakData[] = [...data];
       const preScoresLength = newData.find((item) => item.id === id).scores
         .length;
@@ -130,8 +132,14 @@ const Svoyak = ({ navigation }) => {
 
   const onScoreButtonClicked = (gamerID: number, score: string) => {
     const newData: ISvoyakData[] = [...data];
+    const preLength = newData.find((item) => item.id === gamerID).scores.length;
     if (score === "-") {
-      newData.find((item) => item.id === gamerID).scores += score;
+      if (
+        newData.find((item) => item.id === gamerID).scores[preLength - 1] !==
+        "-"
+      ) {
+        newData.find((item) => item.id === gamerID).scores += score;
+      }
     } else {
       newData.find((item) => item.id === gamerID).scores += score + " + ";
     }
@@ -212,6 +220,15 @@ const Svoyak = ({ navigation }) => {
     await AsyncStorage.setItem("games", JSON.stringify(games));
   };
 
+  const onClickHint = (gamerID, name) => {
+    const newData: ISvoyakData[] = [...data];
+    newData.find((item) => item.id === gamerID).name = name;
+
+    loadNames();
+    setData(newData);
+    setShowHint(null);
+  };
+
   return (
     <ScrollView style={[{ backgroundColor: "#aaffff" }, !isLight && darkBG]}>
       {isFinished ? (
@@ -239,7 +256,11 @@ const Svoyak = ({ navigation }) => {
                 <View style={hintsWrap}>
                   {showHint === gamer.id &&
                     autocompleteNames.map((name) => (
-                      <TouchableOpacity key={name} style={hintButton}>
+                      <TouchableOpacity
+                        key={name}
+                        style={hintButton}
+                        onPress={() => onClickHint(gamer.id, name)}
+                      >
                         <Text style={hintText}>{name}</Text>
                       </TouchableOpacity>
                     ))}
