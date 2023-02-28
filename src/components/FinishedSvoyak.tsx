@@ -29,17 +29,31 @@ const FinishedSvoyak = ({ results, title, navigation }) => {
     }
   });
 
-  newResults.sort((gamer1, gamer2) => {
-    if (gamer1.scores === gamer2.scores) {
-      if (gamer1.scores === 0) {
-        return gamer2.isLife - gamer1.isLife;
-      } else {
-        return 0;
-      }
+  newResults.sort((a, b) => {
+    if (a.score === 0 && b.score === 0) {
+      if (a.isLife && !b.isLife) return -1;
+      if (b.isLife && !a.isLife) return 1;
     } else {
-      return gamer2.scores - gamer1.scores;
+      return b.score - a.score;
     }
+    return 0;
   });
+
+  // newResults.sort((a, b) => b.score - a.score);
+
+  // const compareFn = (gamer1, gamer2) => {
+  //   if (gamer1.score === gamer2.score) {
+  //     if (gamer1.score === 0) {
+  //       return gamer2.isLife === gamer1.isLife;
+  //     } else {
+  //       return 0;
+  //     }
+  //   } else {
+  //     return gamer2.scores - gamer1.scores;
+  //   }
+  // };
+
+  // compareFn(newResults);
 
   let gamers = [];
   let currentRank = 1;
