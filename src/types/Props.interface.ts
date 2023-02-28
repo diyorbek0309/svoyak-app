@@ -4,4 +4,5 @@ export interface ISvoyakData {
   scores: string;
   numberOfLines: number;
   isActive: boolean;
+  isLife: boolean;
 }

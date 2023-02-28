@@ -58,6 +58,7 @@ const Svoyak = ({ navigation }) => {
           scores: "",
           numberOfLines: 2,
           isActive: false,
+          isLife: false,
         });
       }
       setData(defaultData);
@@ -156,6 +157,13 @@ const Svoyak = ({ navigation }) => {
       }
     });
 
+    let newData: ISvoyakData[] = [...data];
+    newData.map((gamer) => {
+      gamer.isLife = gamer.scores.length > 1;
+    });
+
+    setData(newData);
+
     if (title.length && isFinishable) {
       setIsFinished(true);
     } else {
@@ -181,6 +189,7 @@ const Svoyak = ({ navigation }) => {
         scores: "",
         numberOfLines: 2,
         isActive: false,
+        isLife: false,
       };
       setData([...data, newGamer]);
     }

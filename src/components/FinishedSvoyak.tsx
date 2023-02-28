@@ -7,7 +7,7 @@ import { ThemeContext } from "../services/ThemeContext";
 import { sumScoresFN } from "../services/sumScores";
 
 const FinishedSvoyak = ({ results, title, navigation }) => {
-  const newResults: { name: string; score: number }[] = [];
+  let newResults: { name: string; score: number; isLife: boolean }[] = [];
   const { isLight } = useContext(ThemeContext);
   const {
     titleInput,
@@ -24,11 +24,22 @@ const FinishedSvoyak = ({ results, title, navigation }) => {
       newResults.push({
         name: result.name,
         score: sumScoresFN(result.scores),
+        isLife: result.isLife,
       });
     }
   });
 
-  newResults.sort((a, b) => b.score - a.score);
+  newResults.sort((gamer1, gamer2) => {
+    if (gamer1.scores === gamer2.scores) {
+      if (gamer1.scores === 0) {
+        return gamer2.isLife - gamer1.isLife;
+      } else {
+        return 0;
+      }
+    } else {
+      return gamer2.scores - gamer1.scores;
+    }
+  });
 
   let gamers = [];
   let currentRank = 1;
@@ -39,14 +50,11 @@ const FinishedSvoyak = ({ results, title, navigation }) => {
       currentRank = i + 1;
       currentScore = gamer.score;
     }
-    if (gamer.score === 0) {
-      console.log(gamer.score);
-    }
     gamers.push({
       icon: getEmoji(currentRank),
       name: gamer.name,
       score: gamer.score,
-      isLife: true,
+      isLife: gamer.isLife,
     });
   }
 
@@ -66,7 +74,11 @@ const FinishedSvoyak = ({ results, title, navigation }) => {
               {gamer.name}:
             </Text>
             <Text style={[resultText, !isLight && lightText]}>
-              {gamer.score} ball
+              {gamer.score === 0
+                ? gamer.isLife
+                  ? "0 ball (Jonli)"
+                  : "0 ball"
+                : gamer.score + " ball"}
             </Text>
           </View>
         ))}
