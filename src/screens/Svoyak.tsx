@@ -148,17 +148,22 @@ const Svoyak = ({ navigation }) => {
   };
 
   const onGameFinished = async () => {
-    let newData = [];
-    if (title.length) {
-      newData = data.map((gamer, index) => {
-        if (!gamer.name.length) {
-          gamer.name = `${index + 1}-ishtirokchi`;
-        }
-        return gamer;
-      });
+    let isFinishable = false;
+    data.map((gamer) => {
+      if (gamer.name.length) {
+        isFinishable = true;
+        return;
+      }
+    });
 
-      setData(newData);
+    if (title.length && isFinishable) {
       setIsFinished(true);
+    } else {
+      Alert.alert(
+        "Ogohlantirish",
+        "Oʻyinni yakunlash uchun kamida bitta ishtirokchi ismi kiritilishi kerak!",
+        [{ text: "Kiritish", style: "cancel", onPress: () => {} }]
+      );
     }
     try {
       const games = await getPreGames();
@@ -200,7 +205,7 @@ const Svoyak = ({ navigation }) => {
   };
 
   const addNewGame = async (games) => {
-    const autoNames = [...autocompleteNames];
+    let autoNames = [...autocompleteNames];
     data.map((game) => {
       game.scores = game.scores
         .split(" + ")
@@ -212,6 +217,7 @@ const Svoyak = ({ navigation }) => {
         .toString();
 
       autoNames.push(game.name);
+      autoNames = [...new Set(autoNames)];
     });
 
     data.sort((a, b) => Number(b.scores) - Number(a.scores));

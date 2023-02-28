@@ -75,15 +75,19 @@ const Results = () => {
               </TouchableOpacity>
             </View>
             {game.results.length ? (
-              game.results.map((result, index) => (
-                <View key={result.id} style={singleGamer}>
-                  <Text style={gamerName}>
-                    {icons[index] || `${index + 1}.`}
-                  </Text>
-                  <Text style={gamerName}>{result.name}</Text>
-                  <Text style={gamerScore}>{result.scores}</Text>
-                </View>
-              ))
+              game.results.map((result, index) => {
+                if (result.name) {
+                  return (
+                    <View key={result.id} style={singleGamer}>
+                      <Text style={gamerName}>
+                        {icons[index] || `${index + 1}.`}
+                      </Text>
+                      <Text style={gamerName}>{result.name}</Text>
+                      <Text style={gamerScore}>{result.scores}</Text>
+                    </View>
+                  );
+                }
+              })
             ) : (
               <Text>Natijalar yo'q</Text>
             )}

@@ -20,10 +20,12 @@ const FinishedSvoyak = ({ results, title, navigation }) => {
   } = styles;
 
   results.forEach((result: ISvoyakData) => {
-    newResults.push({
-      name: result.name,
-      score: sumScoresFN(result.scores),
-    });
+    if (result.name.length) {
+      newResults.push({
+        name: result.name,
+        score: sumScoresFN(result.scores),
+      });
+    }
   });
 
   newResults.sort((a, b) => b.score - a.score);
@@ -37,10 +39,14 @@ const FinishedSvoyak = ({ results, title, navigation }) => {
       currentRank = i + 1;
       currentScore = gamer.score;
     }
+    if (gamer.score === 0) {
+      console.log(gamer.score);
+    }
     gamers.push({
       icon: getEmoji(currentRank),
       name: gamer.name,
       score: gamer.score,
+      isLife: true,
     });
   }
 
