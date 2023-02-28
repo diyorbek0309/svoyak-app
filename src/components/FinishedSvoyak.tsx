@@ -39,22 +39,6 @@ const FinishedSvoyak = ({ results, title, navigation }) => {
     return 0;
   });
 
-  // newResults.sort((a, b) => b.score - a.score);
-
-  // const compareFn = (gamer1, gamer2) => {
-  //   if (gamer1.score === gamer2.score) {
-  //     if (gamer1.score === 0) {
-  //       return gamer2.isLife === gamer1.isLife;
-  //     } else {
-  //       return 0;
-  //     }
-  //   } else {
-  //     return gamer2.scores - gamer1.scores;
-  //   }
-  // };
-
-  // compareFn(newResults);
-
   let gamers = [];
   let currentRank = 1;
   let currentScore = newResults[0].score;
