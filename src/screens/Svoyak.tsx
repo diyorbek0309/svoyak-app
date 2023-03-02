@@ -164,18 +164,18 @@ const Svoyak = ({ navigation }) => {
 
     setData(newData);
 
-    if (title.length && isFinishable) {
-      setIsFinished(true);
-    } else {
-      Alert.alert(
-        "Ogohlantirish",
-        "Oʻyinni yakunlash uchun kamida bitta ishtirokchi ismi kiritilishi kerak!",
-        [{ text: "Kiritish", style: "cancel", onPress: () => {} }]
-      );
-    }
     try {
-      const games = await getPreGames();
-      await addNewGame(games);
+      if (title.length && isFinishable) {
+        const games = await getPreGames();
+        await addNewGame(games);
+        setIsFinished(true);
+      } else {
+        Alert.alert(
+          "Ogohlantirish",
+          "Oʻyinni yakunlash uchun kamida bitta ishtirokchi ismi kiritilishi kerak!",
+          [{ text: "Kiritish", style: "cancel", onPress: () => {} }]
+        );
+      }
     } catch (error) {
       console.log(error);
     }
@@ -317,6 +317,7 @@ const Svoyak = ({ navigation }) => {
                   onChangeText={(scores) => onChangeScore(scores, gamer.id)}
                   onFocus={() => showScoreButtons(gamer.id)}
                   placeholder="Ball"
+                  editable={false}
                 />
               </View>
             ))
