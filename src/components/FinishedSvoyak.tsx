@@ -72,10 +72,8 @@ const FinishedSvoyak = ({ results, title, navigation }) => {
               {gamer.name}:
             </Text>
             <Text style={[resultText, !isLight && lightText]}>
-              {gamer.score === 0
-                ? gamer.isLife
-                  ? "0 ball (Jonli)"
-                  : "0 ball"
+              {gamer.score === 0 && gamer.isLife
+                ? "0 ball (Jonli)"
                 : gamer.score + " ball"}
             </Text>
           </View>

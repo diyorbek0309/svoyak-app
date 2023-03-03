@@ -51,8 +51,6 @@ const Results = () => {
     await AsyncStorage.setItem("games", JSON.stringify(newGames));
   };
 
-  console.log(games);
-
   return (
     <ScrollView style={[resultsWrap, !isLight && darkBG]}>
       <DeleteModal

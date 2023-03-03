@@ -8,7 +8,6 @@ import {
   ScrollView,
   Alert,
   BackHandler,
-  Keyboard,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FinishedSvoyak from "../components/FinishedSvoyak";
@@ -118,7 +117,6 @@ const Svoyak = ({ navigation }) => {
   const onChangeScore = (scores: string, id: number) => {
     const pattern = /^[\-\+\s]*[\d\s]*[\-\+\s]*$/;
     if (pattern.test(scores[scores.length - 1])) {
-      console.log(scores);
       const newData: ISvoyakData[] = [...data];
       const preScoresLength = newData.find((item) => item.id === id).scores
         .length;
@@ -198,7 +196,6 @@ const Svoyak = ({ navigation }) => {
   };
 
   const showScoreButtons = (id: number) => {
-    // Keyboard.dismiss();
     const newData: ISvoyakData[] = [...data];
     newData.forEach((item) => (item.isActive = false));
     newData.find((item) => item.id === id).isActive = true;
@@ -218,15 +215,6 @@ const Svoyak = ({ navigation }) => {
   const addNewGame = async (games: ISingleGame[]) => {
     let autoNames = [...autocompleteNames];
     data.map((game) => {
-      game.scores = game.scores
-        .split(" + ")
-        .map((item: string) => {
-          if (item) return parseInt(item);
-          else return 0;
-        })
-        .reduce((acc: number, a: number) => acc + a, 0)
-        .toString();
-
       autoNames.push(game.name);
       autoNames = [...new Set(autoNames)];
     });
