@@ -8,11 +8,12 @@ import {
   ScrollView,
   Alert,
   BackHandler,
+  Keyboard,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FinishedSvoyak from "../components/FinishedSvoyak";
 import { styles } from "../styles/SSvoyak";
-import { ISvoyakData } from "../types/Props.interface";
+import { ISvoyakData, ISingleGame } from "../types/Props.interface";
 import { eSvoyak, scoresList } from "../types/enums";
 import { ThemeContext } from "../services/ThemeContext";
 import { sumScoresFN } from "../services/sumScores";
@@ -197,6 +198,7 @@ const Svoyak = ({ navigation }) => {
   };
 
   const showScoreButtons = (id: number) => {
+    // Keyboard.dismiss();
     const newData: ISvoyakData[] = [...data];
     newData.forEach((item) => (item.isActive = false));
     newData.find((item) => item.id === id).isActive = true;
@@ -213,7 +215,7 @@ const Svoyak = ({ navigation }) => {
     }
   };
 
-  const addNewGame = async (games) => {
+  const addNewGame = async (games: ISingleGame[]) => {
     let autoNames = [...autocompleteNames];
     data.map((game) => {
       game.scores = game.scores
@@ -231,7 +233,7 @@ const Svoyak = ({ navigation }) => {
 
     data.sort((a, b) => Number(b.scores) - Number(a.scores));
 
-    const game = {
+    const game: ISingleGame = {
       id: games.length,
       title,
       date: Date.now(),
@@ -244,7 +246,7 @@ const Svoyak = ({ navigation }) => {
     await AsyncStorage.setItem("games", JSON.stringify(games));
   };
 
-  const onClickHint = (gamerID, name) => {
+  const onClickHint = (gamerID: number, name: string) => {
     const newData: ISvoyakData[] = [...data];
     newData.find((item) => item.id === gamerID).name = name;
 
@@ -317,7 +319,7 @@ const Svoyak = ({ navigation }) => {
                   onChangeText={(scores) => onChangeScore(scores, gamer.id)}
                   onFocus={() => showScoreButtons(gamer.id)}
                   placeholder="Ball"
-                  editable={false}
+                  showSoftInputOnFocus={false}
                 />
               </View>
             ))
