@@ -60,40 +60,43 @@ const Results = () => {
         deleteID={deleteID}
       />
       {games && games.length ? (
-        games.map((game) => (
-          <View key={game.id} style={singleGame}>
-            <View>
-              <Text style={gameTitle}>{game.title}</Text>
-              <TouchableOpacity
-                style={delIcon}
-                onPress={() => {
-                  setModalVisible(!modalVisible);
-                  setDeleteID(game.id);
-                }}
-              >
-                <Image source={require("../../assets/trash.png")} />
-              </TouchableOpacity>
+        games.map((game) => {
+          console.log(game);
+          return (
+            <View key={game.id} style={singleGame}>
+              <View>
+                <Text style={gameTitle}>{game.title}</Text>
+                <TouchableOpacity
+                  style={delIcon}
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                    setDeleteID(game.id);
+                  }}
+                >
+                  <Image source={require("../../assets/trash.png")} />
+                </TouchableOpacity>
+              </View>
+              {game.results.length ? (
+                game.results.map((result, index) => {
+                  if (result.name) {
+                    return (
+                      <View key={result.id} style={singleGamer}>
+                        <Text style={gamerName}>
+                          {icons[index] || `${index + 1}.`}
+                        </Text>
+                        <Text style={gamerName}>{result.name}</Text>
+                        <Text style={gamerScore}>{result.scores}</Text>
+                      </View>
+                    );
+                  }
+                })
+              ) : (
+                <Text>Natijalar yo'q</Text>
+              )}
+              <Text style={gameDate}>{formatDate(game.date)}</Text>
             </View>
-            {game.results.length ? (
-              game.results.map((result, index) => {
-                if (result.name) {
-                  return (
-                    <View key={result.id} style={singleGamer}>
-                      <Text style={gamerName}>
-                        {icons[index] || `${index + 1}.`}
-                      </Text>
-                      <Text style={gamerName}>{result.name}</Text>
-                      <Text style={gamerScore}>{result.scores}</Text>
-                    </View>
-                  );
-                }
-              })
-            ) : (
-              <Text>Natijalar yo'q</Text>
-            )}
-            <Text style={gameDate}>{formatDate(game.date)}</Text>
-          </View>
-        ))
+          );
+        })
       ) : (
         <Text style={[noResults, !isLight && lightText]}>
           Yakunlangan oʻyinlar yoʻq!
