@@ -62,6 +62,7 @@ const Svoyak = ({ navigation }) => {
         });
       }
       setData(defaultData);
+      setTitle("Oʻyin nomi");
       setShowHint(null);
 
       const backHandler = BackHandler.addEventListener(
