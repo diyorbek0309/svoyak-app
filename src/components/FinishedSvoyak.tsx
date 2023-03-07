@@ -1,5 +1,6 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { styles } from "../styles/SSvoyak";
 import { ISvoyakData } from "../types/Props.interface";
 import { getEmoji } from "../services/getEmoji";
@@ -8,6 +9,7 @@ import { sumScoresFN } from "../services/sumScores";
 
 const FinishedSvoyak = ({ results, title, navigation }) => {
   let newResults: { name: string; score: number; isLife: boolean }[] = [];
+  let gamers = [];
   const { isLight } = useContext(ThemeContext);
   const {
     titleInput,
@@ -18,6 +20,12 @@ const FinishedSvoyak = ({ results, title, navigation }) => {
     textInButton,
     goHome,
   } = styles;
+
+  useEffect(() => {
+    getPreGames().then((storedGames) => {
+      addNewGame(storedGames);
+    });
+  }, []);
 
   results.forEach((result: ISvoyakData) => {
     if (result.name.length) {
@@ -39,7 +47,6 @@ const FinishedSvoyak = ({ results, title, navigation }) => {
     return 0;
   });
 
-  let gamers = [];
   let currentRank = 1;
   let currentScore = newResults[0].score;
   for (let i = 0; i < newResults.length; i++) {
@@ -56,13 +63,45 @@ const FinishedSvoyak = ({ results, title, navigation }) => {
     });
   }
 
+  const addNewGame = async (games) => {
+    // let autoNames = [...autocompleteNames],
+    //   newData = [];
+    // data.map((game) => {
+    //   autoNames.push(game.name);
+    //   autoNames = [...new Set(autoNames)];
+    // });
+    // const newData = data.sort((a, b) => Number(b.scores) - Number(a.scores));
+    // setData(newData);
+    // console.log(newData);
+    const game = {
+      id: games.length,
+      title,
+      date: Date.now(),
+      results: gamers,
+      isFinished: true,
+    };
+    games.push(game);
+    // await AsyncStorage.setItem("names", JSON.stringify(autoNames));
+    await AsyncStorage.setItem("games", JSON.stringify(games));
+  };
+
+  const getPreGames = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("games");
+      return jsonValue != null ? JSON.parse(jsonValue) : [];
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  console.log(gamers);
+
   return (
     <ScrollView style={{ paddingHorizontal: 10 }}>
       <Text style={[titleInput, !isLight && lightText]}>
         {title} natijalari
       </Text>
-      {gamers &&
-        gamers.length &&
+      {gamers && gamers.length ? (
         gamers.map((gamer: any, index) => (
           <View key={index} style={resultWrap}>
             <Text style={[resultText, !isLight && lightText]}>
@@ -77,7 +116,10 @@ const FinishedSvoyak = ({ results, title, navigation }) => {
                 : gamer.score + " ball"}
             </Text>
           </View>
-        ))}
+        ))
+      ) : (
+        <Text>Ishtirokchilar yo'q</Text>
+      )}
       <TouchableOpacity
         style={[addGamer, goHome]}
         onPress={() => navigation.navigate("Svoyak Calculator")}

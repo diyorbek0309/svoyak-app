@@ -1,5 +1,5 @@
 import { ScrollView, View, Text, TouchableOpacity, Image } from "react-native";
-import { useEffect, useState, useContext, useCallback } from "react";
+import { useState, useContext, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DeleteModal from "../components/DeleteModal";
@@ -85,7 +85,7 @@ const Results = () => {
                           {icons[index] || `${index + 1}.`}
                         </Text>
                         <Text style={gamerName}>{result.name}</Text>
-                        <Text style={gamerScore}>{result.scores}</Text>
+                        <Text style={gamerScore}>{result.score}</Text>
                       </View>
                     );
                   }

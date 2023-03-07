@@ -12,7 +12,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FinishedSvoyak from "../components/FinishedSvoyak";
 import { styles } from "../styles/SSvoyak";
-import { ISvoyakData, ISingleGame } from "../types/Props.interface";
+import { ISvoyakData } from "../types/Props.interface";
 import { eSvoyak, scoresList } from "../types/enums";
 import { ThemeContext } from "../services/ThemeContext";
 import { sumScoresFN } from "../services/sumScores";
@@ -166,8 +166,6 @@ const Svoyak = ({ navigation }) => {
 
     try {
       if (title.length && isFinishable) {
-        const games = await getPreGames();
-        await addNewGame(games);
         setIsFinished(true);
       } else {
         Alert.alert(
@@ -202,37 +200,6 @@ const Svoyak = ({ navigation }) => {
     newData.find((item) => item.id === id).isActive = true;
 
     setData(newData);
-  };
-
-  const getPreGames = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem("games");
-      return jsonValue != null ? JSON.parse(jsonValue) : [];
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const addNewGame = async (games: ISingleGame[]) => {
-    let autoNames = [...autocompleteNames];
-    data.map((game) => {
-      autoNames.push(game.name);
-      autoNames = [...new Set(autoNames)];
-    });
-
-    data.sort((a, b) => Number(b.scores) - Number(a.scores));
-
-    const game: ISingleGame = {
-      id: games.length,
-      title,
-      date: Date.now(),
-      results: data,
-      isFinished: true,
-    };
-    games.push(game);
-
-    await AsyncStorage.setItem("names", JSON.stringify(autoNames));
-    await AsyncStorage.setItem("games", JSON.stringify(games));
   };
 
   const onClickHint = (gamerID: number, name: string) => {
