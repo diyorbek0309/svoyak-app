@@ -60,10 +60,9 @@ const Results = () => {
         deleteID={deleteID}
       />
       {games && games.length ? (
-        games.map((game) => {
-          console.log(game);
+        games.map((game, index) => {
           return (
-            <View key={game.id} style={singleGame}>
+            <View key={index} style={singleGame}>
               <View>
                 <Text style={gameTitle}>{game.title}</Text>
                 <TouchableOpacity
@@ -80,7 +79,7 @@ const Results = () => {
                 game.results.map((result, index) => {
                   if (result.name) {
                     return (
-                      <View key={result.id} style={singleGamer}>
+                      <View key={index} style={singleGamer}>
                         <Text style={gamerName}>
                           {icons[index] || `${index + 1}.`}
                         </Text>

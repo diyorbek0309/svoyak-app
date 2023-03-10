@@ -16,14 +16,16 @@ import { ISvoyakData } from "../types/Props.interface";
 import { eSvoyak, scoresList } from "../types/enums";
 import { ThemeContext } from "../services/ThemeContext";
 import { sumScoresFN } from "../services/sumScores";
+import { sortResults } from "../services/sortResults";
 
 const Svoyak = ({ navigation }) => {
   const [data, setData] = useState<ISvoyakData[]>([]);
   const [title, setTitle] = useState("Oʻyin nomi");
   const [canAdd, setCanAdd] = useState(false);
-  const [autocompleteNames, setAutocompleteNames] = useState(["O. Diyorbek"]);
+  const [autocompleteNames, setAutocompleteNames] = useState([]);
   const [showHint, setShowHint] = useState(null);
   const [isFinished, setIsFinished] = useState(false);
+  const [gamers, setGamers] = useState([]);
   const { isLight } = useContext(ThemeContext);
   const {
     darkBG,
@@ -50,6 +52,7 @@ const Svoyak = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
       setIsFinished(false);
+
       const defaultData = [];
       for (let i = 0; i < 5; i++) {
         defaultData.push({
@@ -107,6 +110,8 @@ const Svoyak = ({ navigation }) => {
   const loadNames = async () => {
     const storedNames = await AsyncStorage.getItem("names");
     if (storedNames) {
+      console.log(storedNames);
+
       setAutocompleteNames(JSON.parse(storedNames));
     }
   };
@@ -149,6 +154,9 @@ const Svoyak = ({ navigation }) => {
   };
 
   const onGameFinished = async () => {
+    getPreGames().then((storedGames) => {
+      addNewGame(storedGames);
+    });
     let isFinishable = false;
     data.map((gamer) => {
       if (gamer.name.length) {
@@ -211,10 +219,52 @@ const Svoyak = ({ navigation }) => {
     setShowHint(null);
   };
 
+  const addNewGame = async (games) => {
+    let storedNames = [];
+
+    let autoNames = [],
+      newGamers = [];
+    newGamers = sortResults(data);
+    setGamers(newGamers);
+
+    const game = {
+      id: games.length,
+      title,
+      date: Date.now(),
+      results: newGamers,
+      isFinished: true,
+    };
+
+    games.push(game);
+
+    newGamers.map((gamer) => {
+      if (!autoNames.includes(gamer.name)) {
+        autoNames.push(gamer.name);
+      }
+    });
+
+    AsyncStorage.getItem("names").then(async (data) => {
+      storedNames = data != null ? JSON.parse(data) : ["Diyorbek"];
+      storedNames.push(...autoNames);
+      await AsyncStorage.setItem("names", JSON.stringify(storedNames));
+    });
+
+    await AsyncStorage.setItem("games", JSON.stringify(games));
+  };
+
+  const getPreGames = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("games");
+      return jsonValue != null ? JSON.parse(jsonValue) : [];
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ScrollView style={[{ backgroundColor: "#aaffff" }, !isLight && darkBG]}>
       {isFinished ? (
-        <FinishedSvoyak results={data} title={title} navigation={navigation} />
+        <FinishedSvoyak gamers={gamers} title={title} navigation={navigation} />
       ) : (
         <>
           <TextInput
@@ -237,9 +287,9 @@ const Svoyak = ({ navigation }) => {
                 />
                 <View style={hintsWrap}>
                   {showHint === gamer.id &&
-                    autocompleteNames.map((name) => (
+                    autocompleteNames.map((name, index) => (
                       <TouchableOpacity
-                        key={name}
+                        key={index}
                         style={hintButton}
                         onPress={() => onClickHint(gamer.id, name)}
                       >

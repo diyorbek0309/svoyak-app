@@ -1,15 +1,9 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { styles } from "../styles/SSvoyak";
-import { ISvoyakData } from "../types/Props.interface";
-import { getEmoji } from "../services/getEmoji";
 import { ThemeContext } from "../services/ThemeContext";
-import { sumScoresFN } from "../services/sumScores";
 
-const FinishedSvoyak = ({ results, title, navigation }) => {
-  let newResults: { name: string; score: number; isLife: boolean }[] = [];
-  let gamers = [];
+const FinishedSvoyak = ({ gamers, title, navigation }) => {
   const { isLight } = useContext(ThemeContext);
   const {
     titleInput,
@@ -20,81 +14,6 @@ const FinishedSvoyak = ({ results, title, navigation }) => {
     textInButton,
     goHome,
   } = styles;
-
-  useEffect(() => {
-    getPreGames().then((storedGames) => {
-      addNewGame(storedGames);
-    });
-  }, []);
-
-  results.forEach((result: ISvoyakData) => {
-    if (result.name.length) {
-      newResults.push({
-        name: result.name,
-        score: sumScoresFN(result.scores),
-        isLife: result.isLife,
-      });
-    }
-  });
-
-  newResults.sort((a, b) => {
-    if (a.score === 0 && b.score === 0) {
-      if (a.isLife && !b.isLife) return -1;
-      if (b.isLife && !a.isLife) return 1;
-    } else {
-      return b.score - a.score;
-    }
-    return 0;
-  });
-
-  let currentRank = 1;
-  let currentScore = newResults[0].score;
-  for (let i = 0; i < newResults.length; i++) {
-    let gamer = newResults[i];
-    if (gamer.score != currentScore) {
-      currentRank = i + 1;
-      currentScore = gamer.score;
-    }
-    gamers.push({
-      icon: getEmoji(currentRank),
-      name: gamer.name,
-      score: gamer.score,
-      isLife: gamer.isLife,
-    });
-  }
-
-  const addNewGame = async (games) => {
-    // let autoNames = [...autocompleteNames],
-    //   newData = [];
-    // data.map((game) => {
-    //   autoNames.push(game.name);
-    //   autoNames = [...new Set(autoNames)];
-    // });
-    // const newData = data.sort((a, b) => Number(b.scores) - Number(a.scores));
-    // setData(newData);
-    // console.log(newData);
-    const game = {
-      id: games.length,
-      title,
-      date: Date.now(),
-      results: gamers,
-      isFinished: true,
-    };
-    games.push(game);
-    // await AsyncStorage.setItem("names", JSON.stringify(autoNames));
-    await AsyncStorage.setItem("games", JSON.stringify(games));
-  };
-
-  const getPreGames = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem("games");
-      return jsonValue != null ? JSON.parse(jsonValue) : [];
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  console.log(gamers);
 
   return (
     <ScrollView style={{ paddingHorizontal: 10 }}>
