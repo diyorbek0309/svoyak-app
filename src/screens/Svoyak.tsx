@@ -110,8 +110,6 @@ const Svoyak = ({ navigation }) => {
   const loadNames = async () => {
     const storedNames = await AsyncStorage.getItem("names");
     if (storedNames) {
-      console.log(storedNames);
-
       setAutocompleteNames(JSON.parse(storedNames));
     }
   };
@@ -220,9 +218,7 @@ const Svoyak = ({ navigation }) => {
   };
 
   const addNewGame = async (games) => {
-    let storedNames = [];
-
-    let autoNames = [],
+    let storedNames = [],
       newGamers = [];
     newGamers = sortResults(data);
     setGamers(newGamers);
@@ -237,15 +233,13 @@ const Svoyak = ({ navigation }) => {
 
     games.push(game);
 
-    newGamers.map((gamer) => {
-      if (!autoNames.includes(gamer.name)) {
-        autoNames.push(gamer.name);
-      }
-    });
-
     AsyncStorage.getItem("names").then(async (data) => {
       storedNames = data != null ? JSON.parse(data) : ["Diyorbek"];
-      storedNames.push(...autoNames);
+      newGamers.map((gamer) => {
+        if (!storedNames.includes(gamer.name)) {
+          storedNames.push(gamer.name);
+        }
+      });
       await AsyncStorage.setItem("names", JSON.stringify(storedNames));
     });
 
